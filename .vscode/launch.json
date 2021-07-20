@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
-      "args": ["<", "soma-string-1.in"],
+      "args": ["<", "cursor-1.in"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
