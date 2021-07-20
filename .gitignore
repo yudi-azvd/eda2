@@ -50,3 +50,16 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+revisao/ansiedade
+revisao/conta-sete
+revisao/cursor
+revisao/eof
+revisao/frequencia
+revisao/ola-mundo
+revisao/reprovado
+revisao/soma-2
+revisao/soma-n
+revisao/soma-string
+
+tmp

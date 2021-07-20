@@ -67,6 +67,6 @@ void adjust_cursor_if_out_of_bounds(char text[MAX_LINES][LINE_LENGTH], int* row,
     *col = *last_col > line_length-1 ? line_length-1:*last_col;
   }
   else {
-    *col = *last_col;
+    *last_col = *col;
   }
 }
