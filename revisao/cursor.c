@@ -67,7 +67,9 @@ void adjust_cursor_horizontally(
   }
   else {
     *col = *last_max_col > line_length-1 
-      ? line_length-1
+      ? line_length-1 < 0 
+        ? 0
+        : line_length-1
       : *last_max_col;
   }
 }
