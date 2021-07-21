@@ -7,6 +7,27 @@ da Universidade de Brasília.
 [Página de EDA2](https://www.brunoribas.com.br/eda2/2021-1/#org9410b9f)
 
 
+## Baixe o repositório
+    git clone --recurse-submodules https://github.com/yudi-azvd/eda2
+
+A flag `--recurse-submodules` serve para inicializar os submódulos de `eda2`.
+Até o momento em que escrevo isso, os submódulos usados aqui estão em 
+`.gitmodules`.
+
+
+## Benchmarking
+Para testar os benchmarks do professor:
+
+    cd sorting/becnhmark-ordenacao
+
+Exemplo de benchmarking para dois algoritmos de ordenação (selection sort normal
+e recursivo) com time out de 6 segundos.
+
+    TIMEOUT=6 BINARY="selectionsort selectionsortR" make printorder time.aleatorio
+
+
+[Vídeo com mais exemplos e explicações](https://www.youtube.com/watch?v=W8XcTiAPaew).
+
 ## Scripts úteis
 Gerar uma entrada aleatória
 
@@ -19,3 +40,22 @@ Frequência de valores em uma coluna
 
 `uniq` precisa que os elementos repetidos estejam adjacentes. `sort` resolve 
 isso.
+
+
+## Snippets
+[VSCode docs](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_transform-examples)
+
+```cpp
+"Header guards": {
+  "prefix": "header_guards",
+  "body": [
+    "#ifndef ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H_INCLUDED",
+    "#define ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H_INCLUDED",
+    "",
+    "$0",
+    "",
+    "#endif // ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}"
+  ],
+  "description": "Header guards template"
+}
+```

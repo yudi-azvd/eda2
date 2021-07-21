@@ -51,6 +51,12 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+## Meus: yudi-azvd
+
+.vscode/settings
+
+*.log.md
+
 revisao/ansiedade
 revisao/conta-sete
 revisao/cursor
