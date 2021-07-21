@@ -6,7 +6,7 @@
 
 void move_cursor_down(char text[MAX_LINES][LINE_LENGTH], int* row, const int number_of_lines);
 void move_cursor_up  (char text[MAX_LINES][LINE_LENGTH], int* row);
-void adjust_cursor_if_out_of_bounds(char text[MAX_LINES][LINE_LENGTH], int* row, int* col, int* last_max_col);
+void adjust_cursor_horizontally(char text[MAX_LINES][LINE_LENGTH], int* row, int* col, int* last_max_col);
 
 
 int main() {
@@ -35,7 +35,7 @@ int main() {
     else if (command == 'k')
       move_cursor_up(text, &row);
     
-    adjust_cursor_if_out_of_bounds(text, &row, &col, &last_max_col);
+    adjust_cursor_horizontally(text, &row, &col, &last_max_col);
 
     printf("%d %d %c\n", row+1, col+1, text[row][col]);
   }
@@ -54,7 +54,7 @@ void move_cursor_down(char text[MAX_LINES][LINE_LENGTH], int* row, const int num
     *row = *row + 1;
 }
 
-void adjust_cursor_if_out_of_bounds(
+void adjust_cursor_horizontally(
   char text[MAX_LINES][LINE_LENGTH],
   int* row,
   int* col,
