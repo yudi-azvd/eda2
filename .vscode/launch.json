@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
-      "args": ["<", "frequencia-3.in"],
+      "args": ["<", "cursor-3.in"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],

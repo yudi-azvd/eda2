@@ -1,20 +1,13 @@
 #include <stdio.h>
 
 int main() {
-  int i = 0, seven_counter = 0;
-  char number[15];
+  int i = 0, seven_counter = 0, b;
+  char number[15]; number[0] = '\0';
 
-  scanf("%s", number);
+  seven_counter = scanf("%15[77777777777777777]", number);
 
-  while (number[i++] != '\0') {
-    if (number[i] == '7') {
-      ++seven_counter;
-    }
-  }
-
-  /* talvez 13 if's, um pra cada caractere */
-
-  printf("%d\n", seven_counter+1);
+  printf("7 counter: %d\n", seven_counter);
+  printf("   number: %s\n", number);
 
   return 0;
 }
