@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
-      "args": ["<", "cursor-7.in"],
+      "args": ["<", "reprovado-2.in"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
