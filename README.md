@@ -6,6 +6,8 @@ da Universidade de Brasília.
 ## Links úteis
 [Página de EDA2](https://www.brunoribas.com.br/eda2/2021-1/#org9410b9f)
 
+[Progresso das aulas e exercícios](https://github.com/yudi-azvd/eda2/issues/1)
+
 
 ## Baixe o repositório
     git clone --recurse-submodules https://github.com/yudi-azvd/eda2
