@@ -70,6 +70,7 @@ revisao/soma-string
 revisao/ultrapassa
 
 sorting/lista-ordenacao-elementar/improvedinsertionsort
+sorting/lista-ordenacao-elementar/pesquisa
 
 tmp
 sorting/benchmark-ordenacao/time.aleatorio

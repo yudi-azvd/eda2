@@ -16,8 +16,7 @@ void improvedinsertionsort(int *v, int l, int h) {
   for (i = l+2; i <= h; ++i) {
     j = i; tmp = v[i];
 
-    // não era pra precisar de "&& j>0"
-    while (tmp < v[j-1] && j > 0) {
+    while (tmp < v[j-1]) {
       v[j] = v[j-1]; --j;
     }
     v[j] = tmp;
