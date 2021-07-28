@@ -70,6 +70,8 @@ revisao/soma-string
 revisao/ultrapassa
 
 sorting/main
+sorting/merge_test
+sorting/mergesort
 sorting/moj-lista-ordenacao-elementar/improvedinsertionsort
 sorting/moj-lista-ordenacao-elementar/pesquisa
 

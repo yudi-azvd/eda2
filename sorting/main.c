@@ -4,6 +4,7 @@
 #include "convention.h"
 #include "selectionsort.h"
 #include "shellsort.h"
+#include "mergesort.h"
 
 int main() {
   int t;
@@ -16,7 +17,8 @@ int main() {
 
   // selectionsort_r(v,0,t-1);
   // selectionsort(v,0,t-1);
-  shellshort(v,0,t-1);
+  // shellshort(v,0,t-1);
+  mergesort(v, 0, t-1);
 
   // for(int i=0;i<t;i++)
   //   r = printf("%d\n",v[i]);
