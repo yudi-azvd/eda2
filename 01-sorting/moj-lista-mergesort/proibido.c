@@ -1,6 +1,8 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+
+#define V_SIZE 140000
+
 
 void merge(int* v, int lo, int hi1, int hi2) {
   int k = 0, i = lo, j = hi1+1;
@@ -43,14 +45,6 @@ void mergesort(int* v, int lo, int hi) {
 }
 
 
-void print_arr(int* a, int size) {
-  int i = 0;
-  for (; i < size-1; i++)
-    printf("%d ", a[i]);
-  printf("%d\n", a[i]);
-}
-
-
 int binarysearch(int to_find, int* v, int lo, int hi) {
   int mid = (lo + hi)/2;
 
@@ -68,38 +62,22 @@ int binarysearch(int to_find, int* v, int lo, int hi) {
   return v[mid] == to_find ? mid : -1;
 }
 
-int linearsearch(int to_find, int* v, int lo, int hi) {
-  int i = 0;
-  for (i = 0; i < hi-lo+1; i++)
-    if (to_find == v[i])
-      return i;
-  return -1;  
-}
-
 
 int main() {
-  int i = 0, N, M, v[100000], cp[100000];
+  int i, n, to_find;
+  int v[V_SIZE];
 
-  scanf("%d %d\n", &N, &M);
+  scanf("%d", &n);
 
-  while (i < N) {
-    scanf("%d\n", &v[i++]);
+  while (i < n) {
+    scanf("%d", &v[i++]);
   }
 
-  for (i = 0; i < N; ++i)
-    cp[i] = v[i];
-  mergesort(cp, 0, N-1);
+  mergesort(v, 0, n-1);
 
-  int to_find;
-  i = 0;
-  while (i++ < M) {
-    scanf("%d\n", &to_find);
-
-    if (binarysearch(to_find, cp, 0, N-1) == -1)
-      printf("-1\n");
-    else
-      printf("%d\n", linearsearch(to_find, v, 0, N-1));
-  }
-  
+  while (scanf("%d", &to_find) != EOF) 
+    printf("%s\n", 
+      binarysearch(to_find, v, 0, n-1) == -1 ? "nao" : "sim");
+    
   return 0;
 }

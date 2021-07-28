@@ -57,24 +57,6 @@ dkms.conf
 
 *.log.md
 
-00-revisao/ansiedade
-00-revisao/conta-sete
-00-revisao/cursor
-00-revisao/eof
-00-revisao/frequencia
-00-revisao/ola-mundo
-00-revisao/reprovado
-00-revisao/soma-2
-00-revisao/soma-n
-00-revisao/soma-string
-00-revisao/ultrapassa
-
-01-sorting/main
-01-sorting/merge_test
-01-sorting/moj-lista-mergesort/intercala
-01-sorting/moj-lista-mergesort/mergesort2
-01-sorting/moj-lista-ordenacao-elementar/improvedinsertionsort
-01-sorting/moj-lista-ordenacao-elementar/pesquisa
 01-sorting/benchmark-ordenacao/time.aleatorio
 
 tmp
