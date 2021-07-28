@@ -1,0 +1,3 @@
+[submodule "01-sorting/benchmark-ordenacao"]
+	path = 01-sorting/benchmark-ordenacao
+	url = https://github.com/bcribas/benchmark-ordenacao
