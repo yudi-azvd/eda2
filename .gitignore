@@ -71,7 +71,8 @@ revisao/ultrapassa
 
 sorting/main
 sorting/merge_test
-sorting/mergesort
+sorting/moj-lista-mergesort/intercala
+sorting/moj-lista-mergesort/mergesort2
 sorting/moj-lista-ordenacao-elementar/improvedinsertionsort
 sorting/moj-lista-ordenacao-elementar/pesquisa
 

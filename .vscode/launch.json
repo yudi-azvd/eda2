@@ -11,7 +11,7 @@
       "program": "${fileDirname}/${fileBasenameNoExtension}",
       "args": ["<", 
         // "pesquisa-1.in",
-        "benchmark-ordenacao/input/10-aleatorio",
+        "intercala-1.in",
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
