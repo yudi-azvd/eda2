@@ -11,7 +11,7 @@ sed -i -n '/start-insertion/{p; :a; N; /end-insertion/!ba; s/.*\n//}; p' remocao
 
 # Copia tudo entre "start-copy" e "end-copy" de linkedlist.h
 # | remove a primeira e última linha
-# cola em ll.tmp
+# > "cola" em ll.tmp
 sed -n '/^\/\/ start-copy/,/end-copy/p' linkedlist.h | sed '1d;$d' > ll.tmp
 
 # Insere o conteúdo de ll.tmp depois de "start-insertion" em remocao.c

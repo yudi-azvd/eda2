@@ -30,7 +30,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 *.i*86
 *.x86_64
@@ -62,3 +61,5 @@ dkms.conf
 tmp
 *.tmp
 *.bak
+*.out
+!*.exp.out
