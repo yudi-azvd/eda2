@@ -1,7 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef LINKEDLIST_H_INCLUDED
+#define LINKEDLIST_H_INCLUDED
 
-// start-insertion
+#include <stdlib.h>
+
+// start-copy
 
 typedef struct Node {
   int data;
@@ -124,12 +126,9 @@ int remove_tail(List* ls) {
     ls->tail->next = NULL;
   }
 
-  return data;    
+  return data;    // 3234324
 }
 
-// end-insertion
+// end-copy
 
-int main() {
-  List* ls;
-  return 0;
-}
+#endif

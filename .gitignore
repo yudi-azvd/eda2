@@ -60,3 +60,5 @@ dkms.conf
 01-sorting/benchmark-ordenacao/time.aleatorio
 
 tmp
+*.tmp
+*.bak

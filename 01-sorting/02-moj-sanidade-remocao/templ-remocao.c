@@ -2,6 +2,36 @@
 #include <stdio.h>
 
 // start-insertion
+#include <stdlib.h>
+#include <stdio.h>
+
+// start-insertion
+// end-insertion
+
+int main() {
+  List* ls;
+  return 0;
+}
+#include <stdlib.h>
+#include <stdio.h>
+
+// start-insertion
+#include <stdlib.h>
+#include <stdio.h>
+
+// start-insertion
+// end-insertion
+
+int main() {
+  List* ls;
+  return 0;
+}
+// end-insertion
+
+int main() {
+  List* ls;
+  return 0;
+}
 
 typedef struct Node {
   int data;
@@ -130,6 +160,5 @@ int remove_tail(List* ls) {
 // end-insertion
 
 int main() {
-  List* ls;
   return 0;
 }

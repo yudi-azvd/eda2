@@ -20,7 +20,7 @@ Até o momento em que escrevo isso, os submódulos usados aqui estão em
 ## Benchmarking
 Para testar os benchmarks do professor:
 
-    cd sorting/becnhmark-ordenacao
+    cd 01-sorting/becnhmark-ordenacao
 
 Exemplo de benchmarking para dois algoritmos de ordenação (selection sort normal
 e recursivo) com time out de 6 segundos.
