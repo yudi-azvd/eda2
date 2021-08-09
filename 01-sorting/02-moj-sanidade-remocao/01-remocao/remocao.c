@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 // #region LinkedList
+
 // start-insertion
 
 typedef struct Node {
@@ -134,14 +135,14 @@ int remove_tail(List* ls) {
 // https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-sanidade-e-remocao/remocao.html
 
 
-typedef struct item_t {
+typedef struct node_t {
   unsigned long int my_addr;
   unsigned long int prev;
   unsigned long int next;
-} item_t;
+} node_t;
 
 
-void print_item_t(item_t ptr) {
+void print_node_t(node_t ptr) {
   printf("%lx %lx %lx\n", ptr.my_addr, ptr.prev, ptr.next);
 }
 
@@ -149,15 +150,15 @@ void print_item_t(item_t ptr) {
 int main() {
   List* ls = create_list();
   destroy_list(ls);
-  item_t ptr1, ptr2, curr_ptr;
+  node_t ptr1, ptr2, currptr;
 
   scanf("%lx %lx %lx", &ptr1.my_addr, &ptr1.prev, &ptr1.next);
   scanf("%lx %lx %lx", &ptr2.my_addr, &ptr2.prev, &ptr2.next);
-  print_item_t(ptr1);
-  print_item_t(ptr2);
+  print_node_t(ptr1);
+  print_node_t(ptr2);
 
-  while (scanf("%lx %lx %lx", &curr_ptr.my_addr, &curr_ptr.prev, &curr_ptr.next) != EOF) {
-    print_item_t(curr_ptr);
+  while (scanf("%lx %lx %lx", &currptr.my_addr, &currptr.prev, &currptr.next) != EOF) {
+    print_node_t(currptr);
   }
 
   return 0;
