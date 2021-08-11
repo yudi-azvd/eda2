@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}.out",
-      "args": [ "<", "sanidade-8.in" ],
+      "args": [ "<", "remocao-03.in" ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],

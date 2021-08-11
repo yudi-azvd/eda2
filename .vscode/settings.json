@@ -1,5 +1,6 @@
 {
   "files.associations": {
+    "*.data": "riscv",
     ".sequelizerc": "javascript",
     ".prettierrc": "json",
     "*.asm": "asm-intel-x86-generic",
@@ -10,7 +11,8 @@
     "istream": "c",
     "ostream": "c",
     "system_error": "c",
-    "typeinfo": "c"
+    "typeinfo": "c",
+    "mergesort.h": "c"
   },
   "testMate.cpp.test.advancedExecutables": [
     {
