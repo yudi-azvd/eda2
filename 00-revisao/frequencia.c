@@ -1,33 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_RECORDS 100000
+#define MAX_RECORDS 1000000
 #define PRESENT '1'
-
-int count_present_records(char* records, int len) {
-  int count = 0;
-  for (int i = 0; i < len; i++) {
-    count += (records[i] == PRESENT);
-  }
-  return count;
-}
+#define ABSENT 0
 
 /*
   1 ≤ N ≤ 10^5
   Para cada elemento Vi, 0 ≤ Vi ≤ 10^6
 */
 int main() {
-  char records[MAX_RECORDS] = {[0 ... MAX_RECORDS-1] = 0};
-  int nrecords, record;
+  char records[MAX_RECORDS] = {[0 ... MAX_RECORDS-1] = ABSENT};
+  int nrecords, record, present_records = 0;
 
   scanf("%d\n", &nrecords);
 
   while (nrecords--) {
     scanf("%d\n", &record);
-    records[record] = PRESENT;
+
+    if (records[record] == ABSENT) {
+      records[record] = PRESENT;
+      ++present_records;
+    }
   }
 
-  printf("%d\n", count_present_records(records, MAX_RECORDS));
+  printf("%d\n", present_records);
 
   return 0;
 }

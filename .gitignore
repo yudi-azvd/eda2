@@ -63,3 +63,4 @@ tmp
 *.bak
 *.out
 !*.exp.out
+*Zone.Identifier

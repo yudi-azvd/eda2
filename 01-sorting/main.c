@@ -21,12 +21,12 @@ int main() {
   // selectionsort(v,0,t-1);
   // shellshort(v,0,t-1);
   // mergesort(v, 0, t-1);
-  int piv = partition(v, 0, t-1);
-  printf("pivot: %d\n", piv);
-  print_arr(v, 0, t-1);
+  quicksort_m3(v, 0, t-1);
+  // printf("pivot: %d\n", piv);
+  // print_arr(v, 0, t-1);
 
   // for(int i=0;i<t;i++)
   //   r = printf("%d\n",v[i]);
-  // printf("is sorted: %d\n", issorted(v, t));
+  printf("is sorted: %d\n", issorted(v, t));
   return 0;
 }

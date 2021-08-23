@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}.out",
-      "args": [ "<", "remocao-03.in" ],
+      "args": [ "8", "2", "4", "9", "6", "1"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
