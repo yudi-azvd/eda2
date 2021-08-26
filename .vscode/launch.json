@@ -11,7 +11,7 @@
       "program": "${fileDirname}/${fileBasenameNoExtension}.out",
       // "args": [ "8", "2", "4", "9", "6", "1"],
       // "args": [ "1000", "<", "randInt1K.txt" ],
-      "args": [ "<", "in/01.in" ],
+      "args": [ "<", "in/00.in" ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],

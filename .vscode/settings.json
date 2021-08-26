@@ -1,9 +1,9 @@
 {
   "files.associations": {
-    "*.data": "riscv",
     ".sequelizerc": "javascript",
     ".prettierrc": "json",
     "*.asm": "asm-intel-x86-generic",
+    "*.data": "riscv",
     ".h": "c",
     "stdio.h": "c",
     "numeric": "c",
@@ -26,7 +26,13 @@
     "limits": "c",
     "quicksort.h": "c",
     "separa.h": "c",
-    "ordenacaomacros.h": "c"
+    "ordenacaomacros.h": "c",
+    "vector": "c",
+    "exception": "c",
+    "string_view": "c",
+    "iosfwd": "c",
+    "ratio": "c",
+    "sstream": "c"
   },
   "testMate.cpp.test.advancedExecutables": [
     {
