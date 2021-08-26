@@ -103,7 +103,6 @@ void LPHashTable_set(LPHashTable* ht, int key, int value) {
 
   if (probe >= capacity) {
     printf("table is full\n");
-    LPHashTable_destroy(ht);
     exit(1);
   }
 
