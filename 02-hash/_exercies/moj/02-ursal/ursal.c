@@ -2,17 +2,19 @@
 // https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-hash/eleicao-ursal-big.html
 // https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-hash/eleicao-ursal-big.pdf
 
+// outra hash function pra dar uma olhada
+// http://www.azillionmonkeys.com/qed/hash.html
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define PRESIDENT_INITIAL_CAPACITY 1009
-#define SENATOR_INITIAL_CAPACITY 1009
-#define DEPFED_INITIAL_CAPACITY 1009
-#define DEPEST_INITIAL_CAPACITY 1009
-#define CANDIDATES_CAPACITY 1009
+#define PRESIDENT_INITIAL_CAPACITY 28499
+#define SENATOR_INITIAL_CAPACITY 28499
+#define DEPFED_INITIAL_CAPACITY 28499
+#define DEPEST_INITIAL_CAPACITY 28499
+#define CANDIDATES_CAPACITY 28499
 
-// #define less(A, B) (A.votes < B.votes)
 #define lessequal(A, B) (A.votes <= B.votes)
 #define exch(A, B) \
   {                \
@@ -134,11 +136,14 @@ void print_president_winner(candidate_t* pres, int size, int valid_votes) {
 }
 
 void print_winners(candidate_t* v, int n_eligible_winners) {
-  for (size_t i = 0; i < n_eligible_winners; i++)
+  int i = 0;
+  for (; i < n_eligible_winners-1; i++)
     printf("%d ", v[i].code);
-  printf("\n");
+  printf("%d\n", v[i].code);
 }
 
+// stack size para o problema: 204800
+//        stack size original: 8192
 int main() {
   candidate_t presidents[PRESIDENT_INITIAL_CAPACITY] 
     = {[0 ... CANDIDATES_CAPACITY-1] = {0, 0}};
