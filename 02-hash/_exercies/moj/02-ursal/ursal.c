@@ -19,43 +19,43 @@ typedef struct candidate_t {
   int votes;
 } candidate_t;
 
-// [lo .. hi1-1] [hi1 .. hi2]
 void merge(
+  candidate_t* aux, 
   candidate_t* v, 
   int lo, 
-  int hi1, 
-  int hi2,
+  int mid, 
+  int hi,
   int (*cmp)(const void *, const void *)
 ) {
-  int k = 0, i = lo, j = hi1+1;
-  candidate_t* aux = (candidate_t*) calloc(hi2-lo+1, sizeof(candidate_t));
+  int k = 0, i = lo, j = mid+1;
+  // candidate_t* aux = (candidate_t*) calloc(hi2-lo+1, sizeof(candidate_t));
+  aux = (candidate_t*) calloc(hi-lo+1, sizeof(candidate_t));
 
-  while (i <= hi1 && j <= hi2) {
-    // if (((*cmp)(&v[i], &v[j]) <= 0))
-    // if (!((*cmp)(&v[i], &v[j]) <= 0))
+  while (i <= mid && j <= hi) {
     if ((*cmp)(&v[i], &v[j]) <= 0)
       aux[k++] = v[i++];
     else
       aux[k++] = v[j++];
   }
 
-  while (i <= hi1) {
+  while (i <= mid) {
     aux[k++] = v[i++];
   }
 
-  while (j <= hi2) {
+  while (j <= hi) {
     aux[k++] = v[j++];
   }
 
   // copiar para o vetor original
   k = 0;
-  for (i = lo; i <= hi2; ++i)
+  for (i = lo; i <= hi; ++i)
     v[i] = aux[k++];
 
   free(aux);  
 }
 
 void mergesort(
+  candidate_t* aux,
   candidate_t* v, 
   int lo,
   int hi, 
@@ -65,9 +65,9 @@ void mergesort(
 
   int mid = (lo+hi)/2;
 
-  mergesort(v, lo, mid, cmp);
-  mergesort(v, mid+1, hi, cmp);
-  merge(v, lo, mid, hi, cmp);
+  mergesort(aux, v, lo, mid, cmp);
+  mergesort(aux, v, mid+1, hi, cmp);
+  merge(aux, v, lo, mid, hi, cmp);
 }
 
 
@@ -160,8 +160,10 @@ void print_president_winner(candidate_t* pres, int size, int valid_votes) {
     printf("Segundo turno\n");
 }
 
+candidate_t* aux;
+
 void sort_print_winners(candidate_t* candidates, int start, int size, int n_eligible_winners) {
-  mergesort(candidates, start, size-1, cmpbyvotes_desc);
+  mergesort(aux, candidates, start, size-1, cmpbyvotes_desc);
 
   int i = start;
   for (; i < start+n_eligible_winners-1; i++)
@@ -203,9 +205,10 @@ int main() {
   printf("%d %d\n",
     valid_votes[0]+valid_votes[1]+valid_votes[2]+valid_votes[3],
     invalid_votes);
-
-  // mergesort(candidates, 0, CANDIDATES_CAPACITY-1, &cmpbyvotes_desc);
-  mergesort(candidates, 0, CANDIDATES_CAPACITY-1, &cmpbycode);
+  
+  aux = (candidate_t*) calloc(CANDIDATES_CAPACITY-1, sizeof(candidate_t));
+  mergesort(aux, candidates, 0, CANDIDATES_CAPACITY-1, &cmpbycode);
+  // mergesort(aux, candidates, 0, CANDIDATES_CAPACITY-1, &cmpbyvotes_desc);
 
   // print_winners(candidates, sizes[0]+sizes[1]+sizes[2]+sizes[3]);
   print_president_winner(candidates, sizes[0], valid_votes[0]);
@@ -215,6 +218,8 @@ int main() {
   sort_print_winners(candidates, start, start+sizes[2], n_eligible_depfeds);
   start += sizes[2];
   sort_print_winners(candidates, start, start+sizes[3], n_eligible_depests);
+
+  free(aux);
 }
 
 /**
@@ -230,10 +235,6 @@ int main() {
 
 - ordenar em ordem decrescente estavelmente pelo código do candidato
 - ordenar em ordem decrescente estavelmente pela qtd de votos
-  (ou ao contrário. o resultado que eu quero é que o vetor fique em partes, 
-(ou ao contrário. o resultado que eu quero é que o vetor fique em partes, 
-  (ou ao contrário. o resultado que eu quero é que o vetor fique em partes, 
-  cada parte para um tipo de candidato, cada parte ordenada pela qtd de votos)
 
 // com os contadores de qtd de cada tipo de candidato, eu posso saber 
 //   onde cada tipo de candidato começa no vetor

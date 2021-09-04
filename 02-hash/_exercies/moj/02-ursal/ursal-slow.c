@@ -209,8 +209,6 @@ int main() {
   quicksort(depests, 0, n_eligible_depests-1);
   print_winners(depests, n_eligible_depests);
 
-
-
   // print_votes(presidents, CANDIDATES_CAPACITY);
   // print_votes(senators, CANDIDATES_CAPACITY);
   // print_votes(depfeds, CANDIDATES_CAPACITY);
@@ -237,33 +235,4 @@ int main() {
 
 - quickselect para os E DepEst com maiores votos
   quicksort os E DepEst
-*/
-
-
-/**
-### Solução B - provavelmente vai para o ursal-big
-
-- todos os candidatos ficam no mesmo vetor
-
-- guardar contador de votos válidos para cada tipo de candidato
-- guardar contador da qtd de cada tipo de candidato
-- quando ler a entrada, atribua o voto para o tipo certo de candidato e
-  incremente o respectivo contador de votos válidos,
-  incremente o respectivo contador de tipo de candidato
-
-- ordenar em ordem decrescente estavelmente pelo código do candidato
-- ordenar em ordem decrescente estavelmente pela qtd de votos
-  (ou ao contrário. o resultado que eu quero é que o vetor fique em partes, 
-(ou ao contrário. o resultado que eu quero é que o vetor fique em partes, 
-  (ou ao contrário. o resultado que eu quero é que o vetor fique em partes, 
-  cada parte para um tipo de candidato, cada parte ordenada pela qtd de votos)
-
-// com os contadores de qtd de cada tipo de candidato, eu posso saber 
-//   onde cada tipo de candidato começa no vetor
-
-- selecionar o presidente com mais votos e determinar se é necessário um segundo turno
-- selecionar os S Senadores com mais votos
-- selecionar os F DepFed com mais votos
-- selecionar os E DepEst com mais votos
-
 */
