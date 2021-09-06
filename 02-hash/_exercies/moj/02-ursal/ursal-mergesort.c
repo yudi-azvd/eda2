@@ -9,22 +9,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 
-#define CANDIDATES_CAPACITY 22307
-// #define CANDIDATES_CAPACITY 17
+#define PRESIDENTS_CAPACITY 101
+#define SENATORS_CAPACITY 1013
+#define DEPFEDS_CAPACITY 10177
+#define DEPESTS_CAPACITY 17891
+#define CANDIDATES_CAPACITY 17891
 
-typedef struct candidate_t {
-  int code;
-  int votes;
-} candidate_t;
-
-int less(candidate_t a, candidate_t b) {
-  if (a.votes == b.votes)
-    return a.code < b.code;
-  return a.votes < b.votes;
-}
-
+#define lessequal(A, B) (A.votes <= B.votes)
 #define exch(A, B) \
   {                \
     candidate_t tmp = A;  \
@@ -38,19 +30,15 @@ int less(candidate_t a, candidate_t b) {
       exch(A, B);     \
   }
 
-void insertionsort(candidate_t *v,int l,int r) {
-  for(int i = r; i > l; i--)
-    cmpexch(v[i-i], v[i]);
+typedef struct candidate_t {
+  int code;
+  int votes;
+} candidate_t;
 
-  int j, tmp;
-  for(int i = l + 2; i <= r; i++) {
-    int j = i; candidate_t tmp = v[j];
-    while(!less(tmp, v[j-1])) {
-      v[j] = v[j-1];
-      j--;
-    }
-    v[j] = tmp;
-  }
+int less(candidate_t a, candidate_t b) {
+  if (a.votes == b.votes)
+    return a.code < b.code;
+  return a.votes < b.votes;
 }
 
 void merge(
@@ -62,8 +50,6 @@ void merge(
   int (*cmp)(const void *, const void *)
 ) {
   int k = 0, i = lo, j = mid+1;
-  // candidate_t* aux = (candidate_t*) calloc(hi2-lo+1, sizeof(candidate_t));
-  aux = (candidate_t*) calloc(hi-lo+1, sizeof(candidate_t));
 
   while (i <= mid && j <= hi) {
     if ((*cmp)(&v[i], &v[j]) <= 0)
@@ -84,8 +70,6 @@ void merge(
   k = 0;
   for (i = lo; i <= hi; ++i)
     v[i] = aux[k++];
-
-  free(aux);  
 }
 
 void mergesort(
@@ -104,6 +88,17 @@ void mergesort(
   merge(aux, v, lo, mid, hi, cmp);
 }
 
+void mergesort_wrapper(
+  candidate_t* v, 
+  int lo, 
+  int hi, 
+  int (*cmp)(const void*, const void*)
+) {
+  candidate_t* aux = (candidate_t*) calloc(hi-lo+1, sizeof(candidate_t));
+  mergesort(aux, v, lo, hi, cmp);
+  free(aux);
+}
+
 
 int cmpbyvotes_desc(const void* a, const void* b) {
   candidate_t* cand_a = (candidate_t*) a;
@@ -114,20 +109,8 @@ int cmpbyvotes_desc(const void* a, const void* b) {
   return cand_b->votes - cand_a->votes;  
 }
 
-int cmpbycode(const void* a, const void* b) {
-  candidate_t* cand_a = (candidate_t*) a;
-  candidate_t* cand_b = (candidate_t*) b;
-
-  // itens zerados têm os maiores valores
-  if (cand_a->code == 0)
-    return INT_MAX - cand_b->code;
-  if (cand_b->code == 0)
-    return cand_a->code - INT_MAX;
-  return cand_a->code - cand_b->code;
-}
-
-int hash(int x) {
-  return x % CANDIDATES_CAPACITY;
+int hash(int x, int capacity) {
+  return x % capacity;
 }
 
 int type_of_candidate(int candidate_code) {
@@ -144,10 +127,8 @@ int type_of_candidate(int candidate_code) {
   return -1;
 }
 
-int sizes[4] = {0, 0, 0, 0};
-
-void increment_candidate_votes(candidate_t* candidates, int cand_code) {
-  int hashed_candidate = hash(cand_code),
+void increment_candidate_votes(candidate_t* candidates, int cand_code, int capacity) {
+  int hashed_candidate = hash(cand_code, capacity),
     probe, code;
 
   for (probe = 0; probe < CANDIDATES_CAPACITY; probe++) {
@@ -164,10 +145,6 @@ void increment_candidate_votes(candidate_t* candidates, int cand_code) {
     exit(1);
   }
 
-  int type = type_of_candidate(cand_code);
-  int is_new_candidate = candidates[hashed_candidate].votes == 0;
-  if (is_new_candidate)
-    sizes[type]++;
   candidates[hashed_candidate].code = cand_code;
   candidates[hashed_candidate].votes++;
 }
@@ -194,38 +171,56 @@ void print_president_winner(candidate_t* pres, int size, int valid_votes) {
     printf("Segundo turno\n");
 }
 
-candidate_t* aux;
-
-void sort_print_winners(candidate_t* candidates, int start, int size, int n_eligible_winners) {
-  mergesort(aux, candidates, start, size-1, cmpbyvotes_desc);
-
-  int i = start;
-  for (; i < start+n_eligible_winners-1; i++)
-    printf("%d ", candidates[i].code);
-  printf("%d\n", candidates[i].code);
+void print_winners(candidate_t* v, int n_eligible_winners) {
+  int i = 0;
+  for (; i < n_eligible_winners-1; i++)
+    printf("%d ", v[i].code);
+  printf("%d\n", v[i].code);
 }
-
 
 // stack size para o problema: 204800
 //        stack size original: 8192
 int main() {
-  candidate_t candidates[CANDIDATES_CAPACITY] = 
-    {[0 ... CANDIDATES_CAPACITY-1] = {0, 0}};
+  candidate_t presidents[PRESIDENTS_CAPACITY] 
+    = {[0 ... PRESIDENTS_CAPACITY-1] = {0, 0}};
+  candidate_t senators[SENATORS_CAPACITY] 
+    = {[0 ... SENATORS_CAPACITY-1] = {0, 0}};
+  candidate_t depfeds[DEPFEDS_CAPACITY] 
+    = {[0 ... DEPFEDS_CAPACITY-1] = {0, 0}};
+  candidate_t depests[DEPESTS_CAPACITY] 
+    = {[0 ... DEPESTS_CAPACITY-1] = {0, 0}};
+  candidate_t* candidates[4];
+  candidates[0] = presidents;
+  candidates[1] = senators;
+  candidates[2] = depfeds;
+  candidates[3] = depests;
   int n_eligible_senators, n_eligible_depfeds, n_eligible_depests;
-  int candidate_code, type, invalid_votes = 0;
+  int candidate_code, type;
+  int invalid_votes = 0;
   int valid_votes[4] = {
     0, // [0] president
     0, // [1] senator
     0, // [2] depfed
     0, // [3] depest
   };
+  int sizes[4] = {
+    0, // [0] president
+    0, // [1] senator
+    0, // [2] depfed
+    0, // [3] depest
+  };
+  int capacities[4] = {
+    PRESIDENTS_CAPACITY, // [0] president
+    SENATORS_CAPACITY, // [1] senator
+    DEPFEDS_CAPACITY, // [2] depfed
+    DEPESTS_CAPACITY, // [3] depest
+  };
 
   scanf("%d %d %d", 
     &n_eligible_senators, 
     &n_eligible_depfeds, 
     &n_eligible_depests);
-
-  while (scanf("%d", &candidate_code) != EOF ) {
+  while (scanf("%d", &candidate_code) != EOF) {
     type = type_of_candidate(candidate_code);
     if (type == -1) {
       invalid_votes++;
@@ -233,49 +228,43 @@ int main() {
     }
 
     valid_votes[type]++;
-    increment_candidate_votes(candidates, candidate_code);
+    increment_candidate_votes(candidates[type], candidate_code, capacities[type]);
   }
 
+  candidate_t aux[CANDIDATES_CAPACITY];
   printf("%d %d\n",
     valid_votes[0]+valid_votes[1]+valid_votes[2]+valid_votes[3],
     invalid_votes);
-  
-  aux = (candidate_t*) calloc(CANDIDATES_CAPACITY-1, sizeof(candidate_t));
-  mergesort(aux, candidates, 0, CANDIDATES_CAPACITY-1, &cmpbycode);
-  // mergesort(aux, candidates, 0, CANDIDATES_CAPACITY-1, &cmpbyvotes_desc);
+  print_president_winner(presidents, PRESIDENTS_CAPACITY, valid_votes[0]);
 
-  // print_winners(candidates, sizes[0]+sizes[1]+sizes[2]+sizes[3]);
-  print_president_winner(candidates, sizes[0], valid_votes[0]);
-  int start = sizes[0];
-  sort_print_winners(candidates, start, start+sizes[1], n_eligible_senators);
-  start += sizes[1];
-  sort_print_winners(candidates, start, start+sizes[2], n_eligible_depfeds);
-  start += sizes[2];
-  sort_print_winners(candidates, start, start+sizes[3], n_eligible_depests);
+  mergesort_wrapper(senators, 0, SENATORS_CAPACITY-1, &cmpbyvotes_desc);
+  print_winners(senators, n_eligible_senators);
 
-  free(aux);
+  mergesort_wrapper(depfeds, 0, DEPFEDS_CAPACITY-1, &cmpbyvotes_desc);
+  print_winners(depfeds, n_eligible_depfeds);
+
+  mergesort_wrapper(depests, 0, DEPESTS_CAPACITY-1, &cmpbyvotes_desc);
+  print_winners(depests, n_eligible_depests);
 }
 
+
 /**
-### Solução B - provavelmente vai para o ursal-big
+### Solução A
 
-- todos os candidatos ficam no mesmo vetor
-
+- vários arrays de candidatos (presidente, senador etc)
 - guardar contador de votos válidos para cada tipo de candidato
-- guardar contador da qtd de cada tipo de candidato
-- quando ler a entrada, atribua o voto para o tipo certo de candidato e
-  incremente o respectivo contador de votos válidos,
-  incremente o respectivo contador de tipo de candidato
+- quando ler a entrada, atribua o voto para o tipo certo de candidato e 
+  incremente o contador de votos válidos
 
-- ordenar em ordem decrescente estavelmente pelo código do candidato
-- ordenar em ordem decrescente estavelmente pela qtd de votos
+- busca linear pelo presidente com mais votos
+  determinar se é necessário o segundo turno
 
-// com os contadores de qtd de cada tipo de candidato, eu posso saber 
-//   onde cada tipo de candidato começa no vetor
+- quickselect para os S Senadores com maiores votos
+  quicksort os S senadores
 
-- selecionar o presidente com mais votos e determinar se é necessário um segundo turno
-- selecionar os S Senadores com mais votos
-- selecionar os F DepFed com mais votos
-- selecionar os E DepEst com mais votos
+- quickselect para os F DepFed com maiores votos
+  quicksort os F DepFed
 
+- quickselect para os E DepEst com maiores votos
+  quicksort os E DepEst
 */

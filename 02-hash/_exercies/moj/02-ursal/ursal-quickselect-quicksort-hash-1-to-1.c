@@ -10,11 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define PRESIDENT_INITIAL_CAPACITY 17891
-#define SENATOR_INITIAL_CAPACITY 17891
-#define DEPFED_INITIAL_CAPACITY 17891
-#define DEPEST_INITIAL_CAPACITY 17891
-#define CANDIDATES_CAPACITY 17891
+#define PRESIDENTS_CAPACITY 100
+#define SENATORS_CAPACITY 1000
+#define DEPFEDS_CAPACITY 10000
+#define DEPESTS_CAPACITY 100000
 
 #define lessequal(A, B) (A.votes <= B.votes)
 #define exch(A, B) \
@@ -40,7 +39,6 @@ int less(candidate_t a, candidate_t b) {
     return a.code < b.code;
   return a.votes < b.votes;
 }
-
 
 int partition(candidate_t *v, int lo, int hi) {
   candidate_t c = v[hi];
@@ -74,10 +72,6 @@ void quickselect(candidate_t *v, int n_smallest, int lo, int hi) {
 }
 
 
-int hash(int x) {
-  return x % CANDIDATES_CAPACITY;
-}
-
 int type_of_candidate(int candidate_code) {
   // existe um função matemática que faz isso sem esse tanto if, cara
   // log10(code)+1
@@ -92,26 +86,9 @@ int type_of_candidate(int candidate_code) {
   return -1;
 }
 
-void increment_candidate_votes(candidate_t* candidates, int cand_code) {
-  int hashed_candidate = hash(cand_code),
-    probe, code;
-
-  for (probe = 0; probe < CANDIDATES_CAPACITY; probe++) {
-    code = candidates[hashed_candidate].code;
-
-    if (candidates[hashed_candidate].code == 0 || code == cand_code)
-      break;
-
-    hashed_candidate = (hashed_candidate+1) % CANDIDATES_CAPACITY;
-  }
-
-  if (probe >= CANDIDATES_CAPACITY) {
-    printf("colors is full\n");
-    exit(1);
-  }
-
-  candidates[hashed_candidate].code = cand_code;
-  candidates[hashed_candidate].votes++;
+void increment_candidate_votes_v2(candidate_t* candidates, int cand_code) {
+  candidates[cand_code].code = cand_code;
+  candidates[cand_code].votes++;
 }
 
 void print_votes(candidate_t* cands, int size) {
@@ -146,14 +123,14 @@ void print_winners(candidate_t* v, int n_eligible_winners) {
 // stack size para o problema: 204800
 //        stack size original: 8192
 int main() {
-  candidate_t presidents[PRESIDENT_INITIAL_CAPACITY] 
-    = {[0 ... CANDIDATES_CAPACITY-1] = {0, 0}};
-  candidate_t senators[SENATOR_INITIAL_CAPACITY] 
-    = {[0 ... CANDIDATES_CAPACITY-1] = {0, 0}};
-  candidate_t depfeds[DEPFED_INITIAL_CAPACITY] 
-    = {[0 ... CANDIDATES_CAPACITY-1] = {0, 0}};
-  candidate_t depests[DEPEST_INITIAL_CAPACITY] 
-    = {[0 ... CANDIDATES_CAPACITY-1] = {0, 0}};
+  candidate_t presidents[PRESIDENTS_CAPACITY] 
+    = {[0 ... PRESIDENTS_CAPACITY-1] = {0, 0}};
+  candidate_t senators[SENATORS_CAPACITY] 
+    = {[0 ... SENATORS_CAPACITY-1] = {0, 0}};
+  candidate_t depfeds[DEPFEDS_CAPACITY] 
+    = {[0 ... DEPFEDS_CAPACITY-1] = {0, 0}};
+  candidate_t depests[DEPESTS_CAPACITY] 
+    = {[0 ... DEPESTS_CAPACITY-1] = {0, 0}};
   candidate_t* candidates[4];
   candidates[0] = presidents;
   candidates[1] = senators;
@@ -174,7 +151,12 @@ int main() {
     0, // [2] depfed
     0, // [3] depest
   };
-
+  int capacities[4] = {
+    PRESIDENTS_CAPACITY,
+    SENATORS_CAPACITY,
+    DEPFEDS_CAPACITY,
+    DEPESTS_CAPACITY,
+  };
 
   scanf("%d %d %d", 
     &n_eligible_senators, 
@@ -188,31 +170,31 @@ int main() {
     }
 
     valid_votes[type]++;
-    increment_candidate_votes(candidates[type], candidate_code);
+    // increment_candidate_votes(candidates[type], candidate_code, capacities[type]);
+    increment_candidate_votes_v2(candidates[type], candidate_code);
   }
 
   
   printf("%d %d\n",
     valid_votes[0]+valid_votes[1]+valid_votes[2]+valid_votes[3],
     invalid_votes);
-  print_president_winner(presidents, CANDIDATES_CAPACITY, valid_votes[0]);
+  // print_president_winner(presidents, PRESIDENTS_CAPACITY, valid_votes[0]);
+  print_president_winner(presidents, 99, valid_votes[0]);
 
-  quickselect(senators, n_eligible_senators, 0, CANDIDATES_CAPACITY-1);
+  quickselect(senators, n_eligible_senators, 0, SENATORS_CAPACITY-1);
   quicksort(senators, 0, n_eligible_senators-1);
   print_winners(senators, n_eligible_senators);
+  // free(aux);
 
-  quickselect(depfeds, n_eligible_depfeds, 0, CANDIDATES_CAPACITY-1);
+  quickselect(depfeds, n_eligible_depfeds, 0, DEPFEDS_CAPACITY-1);
+  quickselect(depfeds, n_eligible_depfeds, 0, 9999);
   quicksort(depfeds, 0, n_eligible_depfeds-1);
   print_winners(depfeds, n_eligible_depfeds);
 
-  quickselect(depests, n_eligible_depests, 0, CANDIDATES_CAPACITY-1);
-  quicksort(depests, 0, n_eligible_depests-1);
+  int depests_start_at = 0;
+  // quickselect(depests, n_eligible_depests, depests_start_at, DEPESTS_CAPACITY-1);
+  quicksort(depests, depests_start_at, DEPESTS_CAPACITY-1);
   print_winners(depests, n_eligible_depests);
-
-  // print_votes(presidents, CANDIDATES_CAPACITY);
-  // print_votes(senators, CANDIDATES_CAPACITY);
-  // print_votes(depfeds, CANDIDATES_CAPACITY);
-  // print_votes(depests, CANDIDATES_CAPACITY);
 }
 
 
