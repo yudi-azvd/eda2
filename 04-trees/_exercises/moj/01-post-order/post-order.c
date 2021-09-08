@@ -15,8 +15,11 @@ typedef struct no {
 //  imprimir em ordem: esq, raiz, dir
 // imprimir pos ordem: esq, dir, raiz
 void pos_ordem(no* raiz) {
-  if (raiz == NULL) return;
-  
+  if (raiz == NULL) {
+    printf("\n");
+    return;
+  }
+
   no *stack[100] = {[0 ... 99] = NULL};
   no *aux;
   int height = 0;
@@ -71,21 +74,22 @@ void procura_insere(no* node, int to_insert, char op, int to_find) {
 int main() {
   int to_find, to_insert;
   char operation;
-  no raiz;
+  no raiz, *raiz_ptr = NULL;
   raiz.esq = NULL;
   raiz.dir = NULL;
   
   int o = scanf("%d", &to_insert);
   if (o != EOF) {
+    raiz_ptr = &raiz;
     raiz.dado = to_insert;
 
     while (scanf("%d %c %d", &to_insert, &operation, &to_find) != EOF) {
-      procura_insere(&raiz, to_insert, operation, to_find);
+      procura_insere(raiz_ptr, to_insert, operation, to_find);
     }
   }
 
   printf("Pos-ordem: ");
-  pos_ordem(&raiz);
+  pos_ordem(raiz_ptr);
 
   return 0;
 }
