@@ -21,26 +21,24 @@ void pos_ordem(no* raiz) {
   }
 
   no *stack[100] = {[0 ... 99] = NULL};
-  no *stack2[100] = {[0 ... 99] = NULL};
-  no *aux = NULL, *aux2 = NULL;
-  int height = 0, height2 = 0;
+  no *aux;
+  int height = 0;
   stack[height++] = raiz;
  
   while (1) {
     aux = stack[--height];
 
-    if (aux != NULL && aux != stack2[height2-1]) {
+    if (aux != NULL) {
       stack[height++] = aux;
-      stack2[height2++] = aux;
       stack[height++] = aux->dir;
       stack[height++] = aux->esq;
     }
     else {
       while ((aux = stack[--height]) == NULL);
       if (height == 0) break;
-      aux2 = stack2[--height2];
-      printf("%d ", aux2->dado);
+      printf("%d ", aux->dado);
       fflush(stdout);
+      stack[height++] = NULL;
     }
   }
 
