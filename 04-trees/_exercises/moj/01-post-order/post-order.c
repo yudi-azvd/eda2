@@ -1,6 +1,6 @@
 // https://moj.naquadah.com.br/cgi-bin/contest.sh/bcr-EDA2-2021_1-arvorebinaria
-// https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-arvorebinaria/arvore-binaria-in.html
-// https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-arvorebinaria/arvore-binaria-in.pdf
+// https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-arvorebinaria/arvore-binaria-pos.html
+// https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-arvorebinaria/arvore-binaria-pos.pdf
 
 // start-copy
 #include <stdio.h>
@@ -21,25 +21,26 @@ void pos_ordem(no* raiz) {
   }
 
   no *stack[100] = {[0 ... 99] = NULL};
-  no *aux;
-  int height = 0;
+  no *stack2[100] = {[0 ... 99] = NULL};
+  no *aux = NULL, *aux2 = NULL;
+  int height = 0, height2 = 0;
   stack[height++] = raiz;
-
+ 
   while (1) {
     aux = stack[--height];
 
-    if (aux != NULL) {
+    if (aux != NULL && aux != stack2[height2-1]) {
       stack[height++] = aux;
-      stack[height++] = NULL;
+      stack2[height2++] = aux;
       stack[height++] = aux->dir;
       stack[height++] = aux->esq;
     }
     else {
-      while ((aux = stack[--height]) == NULL); // descartar os NULL até encontrar
-                                               // um nó != NULL
-      printf("%d ", aux->dado);
-      fflush(stdout);
+      while ((aux = stack[--height]) == NULL);
       if (height == 0) break;
+      aux2 = stack2[--height2];
+      printf("%d ", aux2->dado);
+      fflush(stdout);
     }
   }
 
