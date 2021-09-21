@@ -99,7 +99,7 @@ int main() {
   }
 
   int approx_message_size = MinPQ_size(pq);
-  char* message = calloc(approx_message_size, sizeof(char));
+  char* message = calloc(approx_message_size+1, sizeof(char));
   char letter;
 
   int i = 0;
@@ -111,7 +111,7 @@ int main() {
       last_pkt = pkt;
     }
   }
-
+  message[i] = '\0';
   printf("%s\n", message);
   free(message);
 

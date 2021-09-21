@@ -38,7 +38,7 @@ def main():
     
     test_case.time_duration = end_time - start_time
 
-    diff_exit_status = os.system(f'diff -w --color=always {output_file} {expected_output_files[i]} > diff.tmp')
+    diff_exit_status = os.system(f'diff -aw --color=always {output_file} {expected_output_files[i]} > diff.tmp')
 
     test_case.input_file = input_file
     diff_file = open('diff.tmp', 'r')
