@@ -63,12 +63,12 @@ def main():
   failed_tc = [tc for tc in test_cases if not tc.sucess]
 
   for stc in sucessed_tc:
-    print(f'{stc.time_duration:.2f}s | {stc.input_file} {GREEN}OK{NC}')
+    print(f'{stc.time_duration:.3f}s | {stc.input_file} {GREEN}OK{NC}')
   print()
 
   for ftc in failed_tc:
     print(f'{FMT_BOLD}{YELLOW}========================{NC}')
-    print(f'{ftc.time_duration:.2f}s {YELLOW}diff for test case {FMT_BOLD}{ftc.input_file}{NC}')
+    print(f'{ftc.time_duration:.3f}s {YELLOW}diff for test case {FMT_BOLD}{ftc.input_file}{NC}')
     print(f'{ftc.diff_result}')
 
   if all_success:

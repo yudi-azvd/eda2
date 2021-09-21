@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// https://moj.naquadah.com.br/cgi-bin/contest.sh/bcr-EDA2-2021_1-pq
+// https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-pq/mensagens.html
+
+#define HT_MAX_CAPACITY 2147483648
+
 typedef struct packet_t {
   int id;
   char letter;
@@ -74,31 +79,28 @@ int MinPQ_size(PQ* pq) {
   return pq->size;
 }
 
-int MinPQ_is_max_heap(item_t* array, int array_size) {
-  int i = 2;
-  for (; i <= array_size; i++) {
-    if (less(array[i/2], array[i]))
-      return 0;
-  }
-  
-  return 1;
-}
+#define ABSENT '\0'
+#define PRESENT '1'
 
-
+// original stack size = 8192
 int main() {
   int max_size = 400;
+  // char pkt_ids_ht[HT_MAX_CAPACITY] = {[0 ... HT_MAX_CAPACITY-1] = ABSENT};
+  // char pkt_ids_ht[HT_MAX_CAPACITY];
+  char* pkt_ids_ht = calloc(HT_MAX_CAPACITY, sizeof(char));
   PQ* pq = MinPQ_create(max_size);
   packet_t pkt, last_pkt = {-1, '\0'};
 
   while (scanf("%d %c", &pkt.id, &pkt.letter) != EOF) {
-    MinPQ_insert(pq, pkt);
+    if (pkt_ids_ht[pkt.id] == ABSENT) {
+      pkt_ids_ht[pkt.id] = PRESENT;
+      MinPQ_insert(pq, pkt);
+    }
   }
 
   int approx_message_size = MinPQ_size(pq);
   char* message = calloc(approx_message_size, sizeof(char));
   char letter;
-
-  // printf("is max heap = %d\n", MinPQ_is_max_heap(pq->arr, pq->size));
 
   int i = 0;
   while (MinPQ_size(pq) > 0) {
