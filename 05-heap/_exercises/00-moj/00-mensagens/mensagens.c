@@ -85,8 +85,6 @@ int MinPQ_size(PQ* pq) {
 // original stack size = 8192
 int main() {
   int max_size = 400;
-  // char pkt_ids_ht[HT_MAX_CAPACITY] = {[0 ... HT_MAX_CAPACITY-1] = ABSENT};
-  // char pkt_ids_ht[HT_MAX_CAPACITY];
   char* pkt_ids_ht = calloc(HT_MAX_CAPACITY, sizeof(char));
   PQ* pq = MinPQ_create(max_size);
   packet_t pkt, last_pkt = {-1, '\0'};
