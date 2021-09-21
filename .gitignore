@@ -62,5 +62,7 @@ tmp
 *.tmp
 *.bak
 *.out
-!*.exp.out
+*.tmp.c
+*.submit.c
+!*.out.exp
 *Zone.Identifier
