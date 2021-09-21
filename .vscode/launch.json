@@ -5,13 +5,22 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${fileDirname}"
+    },
+    {
       "name": "gcc-9 - Build and debug active file",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/${fileBasenameNoExtension}.out",
-      // "args": [ "8", "2", "4", "9", "6", "1"],
-      // "args": [ "1000", "<", "randInt1K.txt" ],
-      "args": [ "<", "in/00.in" ],
+      "program": "${fileDirname}/a.out",
+      "args": [
+        "<",
+        "samples/small9-sample-0-normal.in"
+      ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
@@ -27,27 +36,5 @@
       "preLaunchTask": "C: gcc-9 build active file",
       "miDebuggerPath": "/usr/bin/gdb"
     },
-    {
-      "name": "g++ - Build and debug active file",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${fileDirname}/${fileBasenameNoExtension}.out",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${fileDirname}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ],
-      "preLaunchTask": "C++: g++ build active file",
-      "miDebuggerPath": "/usr/bin/gdb"
-    }
-
   ]
 }

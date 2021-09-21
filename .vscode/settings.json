@@ -1,42 +1,8 @@
 {
-  "files.associations": {
-    ".sequelizerc": "javascript",
-    ".prettierrc": "json",
-    "*.asm": "asm-intel-x86-generic",
-    "*.data": "riscv",
-    ".h": "c",
-    "stdio.h": "c",
-    "numeric": "c",
-    "fstream": "c",
-    "istream": "c",
-    "ostream": "c",
-    "system_error": "c",
-    "typeinfo": "c",
-    "mergesort.h": "c",
-    "random": "c",
-    "convention.h": "c",
-    "*.tcc": "c",
-    "chrono": "c",
-    "map": "c",
-    "memory": "c",
-    "memory_resource": "c",
-    "set": "c",
-    "algorithm": "c",
-    "functional": "c",
-    "limits": "c",
-    "quicksort.h": "c",
-    "separa.h": "c",
-    "ordenacaomacros.h": "c",
-    "vector": "c",
-    "exception": "c",
-    "string_view": "c",
-    "iosfwd": "c",
-    "ratio": "c",
-    "sstream": "c"
-  },
   "testMate.cpp.test.advancedExecutables": [
     {
       "pattern": "**/**/*{test}*",
     }
   ],
+  "C_Cpp.autoAddFileAssociations": false,
 }

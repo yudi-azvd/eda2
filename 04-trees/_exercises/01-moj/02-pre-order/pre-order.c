@@ -12,7 +12,7 @@ typedef struct no {
   struct no* dir;
 } no;
 
-void em_ordem(no* raiz) {
+void pre_ordem(no* raiz) {
   no *nodes_stack[100] = {[0 ... 99] = NULL};
   no *aux;
   int stack_height = 0;
@@ -59,6 +59,8 @@ void procura_insere(no* node, int to_insert, char op, int to_find) {
   }
 }
 
+
+// SIM, ESSE PROGRAMA VAZA MEMÓRIA
 // Para a submissão no MOJ deve ser executado o script `cut-paste.sh`
 // O arquivo resultante deve ser submetido.
 int main() {
@@ -75,10 +77,8 @@ int main() {
     procura_insere(&raiz, to_insert, operation, to_find);
   }
 
-  printf("finished inserting\n");
-
   printf("Em ordem: ");
-  em_ordem(&raiz);
+  pre_ordem(&raiz);
 
   return 0;
 }

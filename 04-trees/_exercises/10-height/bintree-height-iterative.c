@@ -10,7 +10,34 @@ typedef struct node_t {
 
 
 int bintree_height_i(node_t* root) {
-  return 1;
+  if (root == NULL) return -1;
+
+  node_t *aux, *stack[100] = {[0 ... 99] = NULL};
+  int stack_height = 0, bintree_height = 0, bintree_max_height = 0;
+  stack[stack_height++] = root;
+
+  while (1) {
+    aux = stack[--stack_height];
+    // --bintree_height;
+
+    if (aux != NULL) {
+      stack[stack_height++] = aux;
+      stack[stack_height++] = aux->left;
+      
+      if (aux->left == NULL)
+        bintree_height += 1;
+      else
+        bintree_height += 2;
+    }
+    else {
+      if (stack_height == 0) break;
+      --bintree_height;
+      aux = stack[--stack_height];
+      stack[stack_height++] = aux->right;
+    }
+  }
+
+  return bintree_height;
 }
 
 
