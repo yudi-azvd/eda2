@@ -37,16 +37,46 @@ int partition_by_score(seed_t *v, int lo, int hi) {
 }
 
 
-int quickselect(seed_t* v, int n, int lo, int hi) {
+int quickselect_r(seed_t* v, int n, int lo, int hi) {
   int pivot = partition_by_score(v, lo, hi);
 
   if (pivot == n) 
     return pivot;
 
   if (pivot < n)
-    return quickselect(v, n, pivot+1, hi);
+    return quickselect_r(v, n, pivot+1, hi);
   else
-    return quickselect(v, n, lo, pivot-1);
+    return quickselect_r(v, n, lo, pivot-1);
+}
+
+
+int quickselect_i(seed_t* v, int n, int lo, int hi) {
+
+  int pivot = -1;
+  while (pivot != n) {
+    pivot = partition_by_score(v, lo, hi);
+    
+    if (pivot < n)
+      lo = pivot + 1;
+    else
+      hi = pivot - 1;
+  }
+
+  return pivot;
+
+  // int pivot_index;
+  // while (lo <= hi) {
+  //   pivot_index = partition_by_score(v, lo, hi);
+
+  //   if (pivot_index == n)
+  //     return pivot_index;
+  //   if (pivot_index > n)
+  //     hi = pivot_index - 1;
+  //   else
+  //     lo = pivot_index + 1;
+  // }
+
+  // return -1;  
 }
 
 
@@ -83,27 +113,36 @@ void print_arr(seed_t *v, int lo, int hi) {
 
 #define less(a, b) (a.code < b.code)
 
-#define max_size 10000000
+// #define max_size 10000000
 
 // Restaurar o limite da pilha original:
 // ulimit -s 8192
 
-// Gerar arquivo de resposta. o número para o comando head está na primeira linha do arquivo de entrada
-// cat 0.in | tail -n +2 | sort -k 2 -g | head -n 4 | sort -g
+// Gerar arquivo de resposta. 
+// IMPORTANTE: o número para o comando head está na primeira linha do arquivo de entrada
+// cat samples/0.in | tail -n +2 | sort -k 2 -g | head -n 4 | sort -g
 int main() {
   int select_how_many_seeds, i = 0;
-  seed_t seeds[max_size];
+  int capacity = 1000;
+  seed_t* seeds = malloc(capacity*sizeof(seed_t));
 
   scanf("%d\n", &select_how_many_seeds);
 
   while (scanf("%lld %d\n", &seeds[i].code, &seeds[i].qlty_score) != EOF) {
+    if (i+1 >= capacity) {
+      capacity *= 2;
+      seeds = realloc(seeds, capacity*sizeof(seed_t));
+    }
+
     ++i;
   }
 
   int seeds_len = i;
-  int index = quickselect(seeds, select_how_many_seeds-1, 0, seeds_len-1);
+  int index = quickselect_i(seeds, select_how_many_seeds-1, 0, seeds_len-1);
   quicksort_m3(seeds, 0, index);
   print_arr(seeds, 0, select_how_many_seeds-1);
+
+  free(seeds);
 
   return 0;
 }

@@ -19,7 +19,7 @@
       "program": "${fileDirname}/a.out",
       "args": [
         "<",
-        "samples/small9-sample-0-normal.in"
+        "samples/2.in"
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
