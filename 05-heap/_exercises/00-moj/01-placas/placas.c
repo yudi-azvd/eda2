@@ -8,8 +8,8 @@ typedef struct packet_t {
 } packet_t;
 
 
-#define item_t packet_t
-#define key(a) (a.id)
+#define item_t int
+#define key(a) (a)
 #define less(a, b) (key(a) < key(b))
 #define exch(a, b) { item_t t = a; a = b; b = t; }
 
@@ -79,11 +79,18 @@ int MinPQ_size(PQ* pq) {
 #define PRESENT '1'
 
 int main() {
-  int op, tmp;
+  int op, tmp, n_smallest;
+  const int INSERT = 1, SHOUT_N_SMALLEST = 2;
   PQ* pq = MinPQ_create(400);
 
+
   while (scanf("%d %d", &op, &tmp) != EOF) {
-    /* code */
+    if (op == INSERT) {
+      MinPQ_insert(pq, tmp);
+    }
+    else {
+      n_smallest = tmp;
+    }
   }
   
   MinPQ_destroy(pq);
