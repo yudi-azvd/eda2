@@ -75,14 +75,11 @@ int MinPQ_size(PQ* pq) {
   return pq->size;
 }
 
-#define ABSENT '\0'
-#define PRESENT '1'
 
 int main() {
   int op, tmp, n_smallest;
   const int INSERT = 1, SHOUT_N_SMALLEST = 2;
   PQ* pq = MinPQ_create(400);
-
 
   while (scanf("%d %d", &op, &tmp) != EOF) {
     if (op == INSERT) {
@@ -90,8 +87,18 @@ int main() {
     }
     else {
       n_smallest = tmp;
+      // imprimir os n smallest
+        // remover da PQ os n smallest
+        // reinserir na PQ os n smallest
     }
   }
   
   MinPQ_destroy(pq);
 }
+// TODO: usar o heapsort elaborado do professor?
+
+/*
+Quando pedir pra imprimir as placas
+  - v.push(pq_del_min()) T vezes
+  - pq_insert(v[i]) T vezes
+*/

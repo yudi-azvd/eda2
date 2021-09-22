@@ -150,7 +150,7 @@ void print_arr(seed_t *v, int lo, int hi) {
 
 // Gerar arquivo de resposta. 
 // IMPORTANTE: o número para o comando head está na primeira linha do arquivo de entrada
-// cat samples/0.in | tail -n +2 | sort -k 2 -g | head -n 4 | sort -g
+// cat samples/0.in | tail -n +2 | sort -k 2 -g | head -n X? | sort -g
 int main() {
   int select_how_many_seeds, i = 0;
   int capacity = 1000;
