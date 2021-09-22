@@ -32,9 +32,9 @@ def main():
     filename, _ = os.path.splitext(input_file)
     output_file = f'{filename}.out'
 
-    start_time = time.process_time()
+    start_time = time.perf_counter()
     os.system(f'./a.out < {input_file} > {output_file}')
-    end_time = time.process_time()
+    end_time = time.perf_counter()
     
     test_case.time_duration = end_time - start_time
 

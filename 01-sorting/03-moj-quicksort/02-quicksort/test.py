@@ -17,7 +17,7 @@ class TestCase:
     self.sucess = False
     self.time_duration = 0
     self.diff_result = ''
-    pass
+
 
 def main():
   input_files = sorted([f for f in glob.glob('samples/*.in')])
@@ -38,7 +38,7 @@ def main():
     
     test_case.time_duration = end_time - start_time
 
-    diff_exit_status = os.system(f'diff -w --color=always {output_file} {expected_output_files[i]} > diff.tmp')
+    diff_exit_status = os.system(f'diff -aw --color=always {output_file} {expected_output_files[i]} > diff.tmp')
 
     test_case.input_file = input_file
     diff_file = open('diff.tmp', 'r')
@@ -54,7 +54,6 @@ def main():
       else:
         test_case.sucess = False
         all_success = False
-        print(f'{RED} FAIL{NC}')
 
     test_cases.append(test_case)
   
@@ -64,12 +63,12 @@ def main():
   failed_tc = [tc for tc in test_cases if not tc.sucess]
 
   for stc in sucessed_tc:
-    print(f'{stc.time_duration:.2f}s | {stc.input_file} {GREEN}OK{NC}')
+    print(f'{stc.time_duration:7.4f}s | {GREEN}OK{NC} {stc.input_file}')
   print()
 
   for ftc in failed_tc:
     print(f'{FMT_BOLD}{YELLOW}========================{NC}')
-    print(f'{ftc.time_duration:.2f}s {YELLOW}diff for test case {FMT_BOLD}{ftc.input_file}{NC}')
+    print(f'{ftc.time_duration:7.4f}s {YELLOW}diff for test case {FMT_BOLD}{ftc.input_file}{NC}')
     print(f'{ftc.diff_result}')
 
   if all_success:
@@ -83,7 +82,7 @@ def main():
   print(f'\n{RESULT_COLOR}=================================')
   print(f'{test_suite_result}')
   print(f'tests passed {correct_test_cases_count}/{total_test_cases} {correct_test_cases_count/total_test_cases*100:.1f}%')
-  print(f'=================================')    
+  print(f'=================================')
   return
 
 if __name__ == '__main__':
