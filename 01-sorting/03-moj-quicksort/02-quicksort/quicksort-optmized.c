@@ -92,7 +92,7 @@ gerar ordernado:
 for((i=0;i<100000;i++)); do echo $i; done > samples/100k-sorted.in
 
 gerar resposta
-$ cat samples/100k-sorted.in | sort -g | awk 'BEGIN { ORS = " " } { print }' > samples/100k-sorted.out.exp
+cat samples/100k-sorted.in | sort -g | awk 'BEGIN { ORS = " " } { print }' > samples/100k-sorted.out.exp
 */
 
 int main() {
