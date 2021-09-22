@@ -9,7 +9,7 @@ typedef int Item;
 
 #define exch(a, b) { Item t = a; a = b; b = t; }
 
-#define cmpexch(a, b) { if (less(a, b)) exch(a, b); }
+#define cmpexch(a, b) { if (less(b, a)) exch(a, b); }
 
 int issorted(Item* itens, int len) {
   int i=1; 

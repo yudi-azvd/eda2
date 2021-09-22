@@ -28,8 +28,6 @@ void improvedinsertionsort(int *v, int l, int h) {
   }
 }
 
-
-
 void exch(int* v, int i, int j) {
   int t = v[i];
   v[i] = v[j];
@@ -37,7 +35,7 @@ void exch(int* v, int i, int j) {
 }
 
 void cmpexch(int* v, int i, int j) {
-  if (v[i] < v[j])
+  if (v[j] < v[i])
     exch(v, i,  j);
 }
 
