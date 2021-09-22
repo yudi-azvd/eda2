@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-typedef struct packet_t {
-  int id;
-  char letter;
-} packet_t;
-
+// https://moj.naquadah.com.br/cgi-bin/contest.sh/bcr-EDA2-2021_1-pq
+// https://moj.naquadah.com.br/contests/bcr-EDA2-2021_1-pq/menores-placas.html
 
 #define item_t int
 #define key(a) (a)
@@ -76,29 +72,43 @@ int MinPQ_size(PQ* pq) {
 }
 
 
+void del_nsmallest_print_reinsert(PQ* pq, int n_smallest) {
+  int i = 0;
+  // o problema fala que n_smallest <= 100
+  static int plaques[100];
+
+  for (; i < n_smallest-1; i++) {
+    plaques[i] = MinPQ_del_min(pq);
+    printf("%d ", plaques[i]);
+  }
+  plaques[i] = MinPQ_del_min(pq);
+  printf("%d\n", plaques[i]);
+
+  for (i = 0; i < n_smallest; i++) {
+    MinPQ_insert(pq, plaques[i]);
+  }
+}
+
+
 int main() {
-  int op, tmp, n_smallest;
-  const int INSERT = 1, SHOUT_N_SMALLEST = 2;
+  int op, number, plaque, n_smallest;
+  int pq_size = 0;
+  const int INSERT = 1;
   PQ* pq = MinPQ_create(400);
 
-  while (scanf("%d %d", &op, &tmp) != EOF) {
+  while (scanf("%d %d", &op, &number) != EOF) {
     if (op == INSERT) {
-      MinPQ_insert(pq, tmp);
+      plaque = number;
+      MinPQ_insert(pq, plaque);
     }
     else {
-      n_smallest = tmp;
-      // imprimir os n smallest
-        // remover da PQ os n smallest
-        // reinserir na PQ os n smallest
+      pq_size = MinPQ_size(pq);
+      n_smallest = number > pq_size 
+        ? pq_size
+        : number;
+      del_nsmallest_print_reinsert(pq, n_smallest);
     }
   }
   
   MinPQ_destroy(pq);
 }
-// TODO: usar o heapsort elaborado do professor?
-
-/*
-Quando pedir pra imprimir as placas
-  - v.push(pq_del_min()) T vezes
-  - pq_insert(v[i]) T vezes
-*/
