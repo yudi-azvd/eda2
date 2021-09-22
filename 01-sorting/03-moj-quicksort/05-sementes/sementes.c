@@ -17,6 +17,30 @@ void exch(seed_t* v, int i, int j) {
   v[j] = t;
 }
 
+void improvedinsertionsort(seed_t *v, int l, int h) {
+  int i = 0, j, min = l;
+  seed_t tmp;
+
+  // o menor elemento fica em [0]
+  for (i = h; i > l; --i) {
+    if (v[i].code < v[i-1].code) {
+      tmp = v[i];
+      v[i] = v[i-1];
+      v[i-1] = tmp;
+    }
+  }
+
+  for (i = l+2; i <= h; ++i) {
+    j = i; tmp = v[i];
+
+    while (tmp.code < v[j-1].code) {
+      v[j] = v[j-1]; --j;
+    }
+    v[j] = tmp;
+  }
+}
+
+
 
 void cmp_by_code_exch(seed_t* v, int i, int j) {
   if (v[i].code < v[j].code)
@@ -92,7 +116,7 @@ int partition_by_code(seed_t *v, int lo, int hi) {
 
 
 void quicksort_m3(seed_t *v, int lo, int hi) {
-  if (lo >= hi) return;
+  if (hi - lo <= 32) return;
 
   exch(v, (lo+hi)/2, hi-1);
   cmp_by_code_exch(v, lo, hi-1);
@@ -103,6 +127,12 @@ void quicksort_m3(seed_t *v, int lo, int hi) {
   quicksort_m3(v, lo, pivot-1);
   quicksort_m3(v, pivot+1, hi);
 }
+
+void quicksort_m3_insertion(seed_t *v, int lo, int hi) {
+  quicksort_m3(v, lo, hi);
+  improvedinsertionsort(v, lo, hi);
+}
+
 
 
 void print_arr(seed_t *v, int lo, int hi) {
@@ -139,7 +169,7 @@ int main() {
 
   int seeds_len = i;
   int index = quickselect_i(seeds, select_how_many_seeds-1, 0, seeds_len-1);
-  quicksort_m3(seeds, 0, index);
+  quicksort_m3_insertion(seeds, 0, index);
   print_arr(seeds, 0, select_how_many_seeds-1);
 
   free(seeds);
