@@ -66,3 +66,6 @@ tmp
 *.submit.c
 !*.out.exp
 *Zone.Identifier
+
+**/test.py
+!/test.py
