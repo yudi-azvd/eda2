@@ -73,10 +73,8 @@ void PQIndexed_fix_down(PQIndexed* pq, int k) {
 
 int PQIndexed_del_max(PQIndexed* pq) {
   int index = pq->pq[1];
-  pq->pq[1] = pq->pq[pq->size--];
-  pq->pq[pq->size+1] = 0;
-  PQIndexed_fix_down(pq, pq->pq[1]);
-  // PQIndexed_fix_down(pq, 1);
+  exch(pq, pq->pq[1], pq->pq[pq->size--]);
+  PQIndexed_fix_down(pq, 1);
   return index;
 }
 
