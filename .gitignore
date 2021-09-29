@@ -69,3 +69,5 @@ tmp
 
 **/test.py
 !/test.py
+**/test.sh
+!/test.sh
