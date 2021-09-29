@@ -111,7 +111,6 @@ void print_mins(PQIndexed* pq, int* grades, int n_restaurants, int n_friends) {
     min_grade_index = PQIndexed_peek_min(pq);
     printf("%d ", grades[min_grade_index]);
 
-    // grades[min_grade_index] = MAX_GRADE;
     grades[interval_start] = MAX_GRADE;
     PQIndexed_change(pq, interval_start);
     PQIndexed_insert(pq, ++interval_end);
@@ -125,7 +124,7 @@ int main() {
   // Essa PQIndexed é orientada a mínimo
   int i, n_restaurants, n_friends, grade;
   int grades[MAX_RESTAURANTS] = {[0 ... MAX_RESTAURANTS-1] = 0};
-  PQIndexed* pq = PQIndexed_create(grades, MAX_RESTAURANTS);
+  PQIndexed* pq = PQIndexed_create(grades, MAX_RESTAURANTS+1);
 
   while (1) {
     scanf("%d %d", &n_restaurants, &n_friends);
