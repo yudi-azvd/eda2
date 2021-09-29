@@ -19,7 +19,7 @@
       "program": "${fileDirname}/a.out",
       "args": [
         "<",
-        "samples/00.in"
+        "samples/01.in"
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",

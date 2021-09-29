@@ -2,136 +2,130 @@
 #include <stdio.h>
 
 // https://moj.naquadah.com.br/cgi-bin/contest.sh/bcr-EDA2-2021_1-pq
-// https://moj.naquadah.com.br/cgi-bin/contest.sh/bcr-EDA2-2021_1-pq
+// https://br.spoj.com/problems/CHURRASC.pdf
 
 #define MAX_RESTAURANTS 100000
 #define MAX_GRADE 1000000001
 
+// Essa PQIndexed é orientada a mínimo
 // #region
 #define item_t int
 #define key(a) (a)
 #define less(a, b) (key(a) < key(b))
-#define exch(a, b) \
-  {                \
-    item_t t = a;  \
-    a = b;         \
-    b = t;         \
-  }
 
-typedef struct PQ
-{
-  int size;
-  int capacity;
-  item_t *arr;
-} PQ;
+typedef struct PQIndexed {
+  int size, capacity;
+  item_t* items;
+  int *pq; // Fila de prioridades que armazena aos índice de um conj de item_t
+           // item_t define a prioridade.
+  int *qp; // Mantém a posição da heap para o elemento de índice k do conj de item_t,
+           // funciona como uma hash.
+} PQIndexed;
+  
+void exch(PQIndexed* pq, int i, int j) {
+  int t = pq->qp[i];
+  pq->qp[i] = pq->qp[j];
+  pq->qp[j] = t;
 
-PQ *MinPQ_create(int max_N)
-{
-  PQ *pq = (PQ *)calloc(1, sizeof(PQ));
-  pq->arr = (item_t *)calloc(max_N + 1, sizeof(item_t));
+  pq->pq[pq->qp[i]] = i;
+  pq->pq[pq->qp[j]] = j;
+}
+
+PQIndexed* PQIndexed_create(item_t* items, int max_size) {
+  PQIndexed* pq = (PQIndexed*) calloc(1, sizeof(PQIndexed));
   pq->size = 0;
-  pq->capacity = max_N;
+  pq->capacity = max_size;
+  pq->items = items;
+  pq->pq = (int*) calloc(max_size+1, sizeof(int));
+  pq->qp = (int*) calloc(max_size+1, sizeof(int));
   return pq;
 }
 
-void MinPQ_destroy(PQ *pq)
-{
-  free(pq->arr);
+void PQIndexed_destroy(PQIndexed* pq) {
+  free(pq->pq);
+  free(pq->qp);
   free(pq);
 }
 
-void MinPQ_fix_up(PQ *pq, int k)
-{
-  item_t *v = pq->arr;
-  while (k > 1 && less(v[k], v[k / 2]))
-  {
-    exch(v[k / 2], v[k]);
-    k = k / 2;
+int PQIndexed_empty(PQIndexed* pq) {
+  return pq->size == 0;
+}
+
+void PQIndexed_fix_up(PQIndexed* pq, int k) {
+  int* v = pq->pq;
+  item_t* items = pq->items;
+  while (k > 1 && less(items[pq->pq[k]], items[pq->pq[k/2]])) {
+    exch(pq, v[k], v[k/2]);
+    k = k/2;
   }
 }
 
-void MinPQ_fix_down(PQ *pq, int k)
-{
+void PQIndexed_insert(PQIndexed* pq, int k) {
+  pq->qp[k] = ++pq->size;
+  pq->pq[pq->size] = k;
+  PQIndexed_fix_up(pq, pq->size);
+}
+
+void PQIndexed_fix_down(PQIndexed* pq, int k) {
   int j;
-  item_t *v = pq->arr;
+  int* v = pq->pq;
+  item_t* items = pq->items;
   int size = pq->size;
-  while (k * 2 <= size)
-  {
-    j = k * 2;
-    if (j < size && less(v[j + 1], v[j]))
-      j++;
-    if (!less(v[j], v[k]))
-      break;
-    exch(v[k], v[j]);
+  while (k*2 <= size) {
+    j = k*2;
+    if (j < size && less(items[pq->pq[j+1]], items[pq->pq[j]])) j++;
+    if (!less(items[pq->pq[j]], items[pq->pq[k]])) break;
+    exch(pq, v[k], v[j]);
     k = j;
   }
 }
 
-void MinPQ_insert(PQ *pq, item_t item)
-{
-  if (pq->size + 1 >= pq->capacity)
-  {
-    pq->capacity *= 2;
-    pq->arr = realloc(pq->arr, pq->capacity * sizeof(item_t));
-  }
-
-  pq->arr[++pq->size] = item;
-  MinPQ_fix_up(pq, pq->size);
+int PQIndexed_del_min(PQIndexed* pq) {
+  int index = pq->pq[1];
+  exch(pq, pq->pq[1], pq->pq[pq->size--]);
+  PQIndexed_fix_down(pq, 1);
+  return index;
 }
 
-item_t MinPQ_del_min(PQ *pq)
-{
-  item_t item = pq->arr[1];
-  pq->arr[1] = pq->arr[pq->size--];
-  MinPQ_fix_down(pq, 1);
-  return item;
+int PQIndexed_peek_min(PQIndexed* pq) {
+  return pq->pq[1];
 }
 
-int MinPQ_size(PQ *pq)
-{
-  return pq->size;
+void PQIndexed_change(PQIndexed* pq, int k) {
+  PQIndexed_fix_up(pq, pq->qp[k]);
+  PQIndexed_fix_down(pq, pq->qp[k]);
 }
-
 // #endregion
 
-void print_mins(PQ* pq, int* grades, int n_restaurants, int n_friends) {
-  int i, pq_size = MinPQ_size(pq);
+// Essa PQIndexed é orientada a mínimo
+
+void print_mins(PQIndexed* pq, int* grades, int n_restaurants, int n_friends) {
+  int i, min_grade_index;
   int interval_start = 0, interval_end = n_friends-1;
 
+  for (i = 0; i < n_friends; i++) {
+    PQIndexed_insert(pq, i);
+  }
+
   while (interval_end < n_restaurants) {
-    for (i = 0; i < n_friends; i++) {
-      MinPQ_insert(pq, grades[interval_start+i]);
-    }
+    min_grade_index = PQIndexed_peek_min(pq);
+    printf("%d ", grades[min_grade_index]);
 
-    printf("%d ", MinPQ_del_min(pq));
-    fflush(stdout);
-
-    while (MinPQ_size(pq) > 0)
-      MinPQ_del_min(pq);
-
-    interval_end++;
-    interval_start++;
+    // grades[min_grade_index] = MAX_GRADE;
+    grades[interval_start] = MAX_GRADE;
+    PQIndexed_change(pq, interval_start);
+    PQIndexed_insert(pq, ++interval_end);
+    ++interval_start;
   }
   
-
   printf("\n");
-  
-  /*
-  min = PQ_peek_min()
-  PQ_change_to(1, MAX_GRADE)
-    fix_down(pq, 1)
-  PQ_insert(next grade)
-
-  if (deleted not in the end of interval)
-    reinsert deleted
-  
-  */
 }
 
 int main() {
-  PQ* pq = MinPQ_create(MAX_RESTAURANTS);
-  int grades[MAX_RESTAURANTS] = {[0 ... MAX_RESTAURANTS-1] = 0};
+  // Essa PQIndexed é orientada a mínimo
   int i, n_restaurants, n_friends, grade;
+  int grades[MAX_RESTAURANTS] = {[0 ... MAX_RESTAURANTS-1] = 0};
+  PQIndexed* pq = PQIndexed_create(grades, MAX_RESTAURANTS);
 
   while (1) {
     scanf("%d %d", &n_restaurants, &n_friends);
@@ -144,8 +138,9 @@ int main() {
     }
 
     print_mins(pq, grades, n_restaurants, n_friends);
+    pq->size = 0;
   }
 
-  MinPQ_destroy(pq);
+  PQIndexed_destroy(pq);
   return 0;
 }
