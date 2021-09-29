@@ -28,6 +28,15 @@ void print_students(student_t* studs, int size) {
     printf("> %3d: %s\n", studs[i].id, studs[i].name);
 }
 
+void print_students_pq(student_t* studs, PQIndexed* pq) {
+  int stud_index;
+  printf("\nPQ:\n");
+  for (int i = 1; i <= pq->size; i++) {
+    stud_index = pq->pq[i];
+    printf("Student %2d %2d | %2d: %s\n", i, stud_index, studs[stud_index].id, studs[stud_index].name);
+  }
+}
+
 void print_student(student_t s) {
   printf("Student -> %3d: %s\n", s.id, s.name);
 }
@@ -43,9 +52,15 @@ int main() {
     PQIndexed_insert(pq, student_index);
   }
 
-  // students[4].id = 101;
-  // PQIndexed_change(pq, 4);
+  print_students_pq(students, pq);
+  printf("\n");
 
+  student_index = 0;
+  printf("change stud priority at %d:\n", student_index);
+  students[student_index].id = 50;
+  PQIndexed_change(pq, student_index);
+
+  printf("del max until empty:\n");
   while (!PQIndexed_empty(pq)) {
     print_student(students[PQIndexed_del_max(pq)]);
   }
