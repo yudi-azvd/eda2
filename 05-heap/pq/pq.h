@@ -9,13 +9,14 @@
 #define exch(a, b) { int t = a; a = b; b = t; }
 
 typedef struct PQ {
-  int size;
+  int size, capacity;
   int* arr;
 } PQ;
 
 
 PQ* PQ_create(int max_N) {
   PQ* pq = (PQ*) calloc(1, sizeof(PQ));
+  pq->capacity = max_N;
   pq->arr = (int*) calloc(max_N+1, sizeof(int));
   pq->size = 0;
   return pq;
@@ -30,7 +31,6 @@ int PQ_empty(PQ* pq) {
   return pq->size == 0;
 }
 
-
 void PQ_fix_up(PQ* pq, int k) {
   int* v = pq->arr;
   while (k > 1 && less(v[k/2], v[k])) {
@@ -38,6 +38,12 @@ void PQ_fix_up(PQ* pq, int k) {
     k = k/2;
   }
 }
+
+void PQ_insert(PQ* pq, int item) {
+  pq->arr[++pq->size] = item;
+  PQ_fix_up(pq, pq->size);
+}
+
 
 void PQ_fix_down(PQ* pq, int k) {
   int j;
@@ -50,11 +56,6 @@ void PQ_fix_down(PQ* pq, int k) {
     exch(v[k], v[j]);
     k = j;
   }
-}
-
-void PQ_insert(PQ* pq, int item) {
-  pq->arr[++pq->size] = item;
-  PQ_fix_up(pq, pq->size);
 }
 
 int PQ_del_max(PQ* pq) {
