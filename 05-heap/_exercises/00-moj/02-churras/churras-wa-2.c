@@ -110,7 +110,11 @@ void print_mins(int* grades, int n_restaurants, int n_friends) {
 
   while (interval_end < n_restaurants) {
     min_grade_index = PQIndexed_peek_min(pq);
-    printf("%d ", grades[min_grade_index]);
+
+    if (interval_end+1 == n_restaurants)
+      printf("%d", grades[min_grade_index]);
+    else
+      printf("%d ", grades[min_grade_index]);
 
     grades[interval_start] = MAX_GRADE;
     PQIndexed_change(pq, interval_start);
