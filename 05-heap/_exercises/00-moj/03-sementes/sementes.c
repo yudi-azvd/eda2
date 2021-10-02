@@ -95,13 +95,13 @@ int less_by_code(item_t a, item_t b) {
 // Gerar solução do problema:
 // sol.py
 int main() {
-  int select_how_many_seeds, i = 0, tmp;
+  int how_many_seeds_to_print, i = 0, tmp;
   int capacity = 1000;
   seed_t seed;
   PQ* pq_by_score = MinPQ_create(capacity, &less_by_score);
 
-  scanf("%d\n", &select_how_many_seeds);
-  PQ* pq_by_code = MinPQ_create(select_how_many_seeds, &less_by_code);
+  scanf("%d\n", &how_many_seeds_to_print);
+  PQ* pq_by_code = MinPQ_create(how_many_seeds_to_print, &less_by_code);
 
   while (scanf("%lld %d\n", &seed.code, &seed.qlty_score) != EOF) {
     MinPQ_insert(pq_by_score, seed);
@@ -109,14 +109,14 @@ int main() {
   }
 
   int seeds_len = i;
-  tmp = select_how_many_seeds;
-  while (select_how_many_seeds--) {
+  tmp = how_many_seeds_to_print;
+  while (how_many_seeds_to_print--) {
     seed = MinPQ_del_min(pq_by_score);
     MinPQ_insert(pq_by_code, seed);
   }
 
-  select_how_many_seeds = tmp;
-  while (select_how_many_seeds--) {
+  how_many_seeds_to_print = tmp;
+  while (how_many_seeds_to_print--) {
     seed = MinPQ_del_min(pq_by_code);
     printf("%lld %d\n", seed.code, seed.qlty_score);
   }
