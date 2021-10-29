@@ -27,14 +27,14 @@ Edge MatUndGraph_edge_create(int a, int b) {
 
 
 // Em uma máquina de 64 bits
-typedef struct MatGraph {
+typedef struct MatUndGraph {
   int vertices; // número de vértices
   int edges; // número de arestas
   Vertex **matrix;
   // 4 (bytes)
   // 4 (bytes)
   // 8 (bytes)
-} MatGraph;
+} MatUndGraph;
 
 
 // Não é amigável para a cache da CPU
@@ -56,7 +56,7 @@ Vertex** _MatUndGraph_matrix_create(int max_vertices, int initial_value) {
   return matrix;
 }
 
-void _MatUndGraph_matrix_destroy(MatGraph* g) {
+void _MatUndGraph_matrix_destroy(MatUndGraph* g) {
   int i;
   for (i = 0; i < g->vertices; ++i) {
     free(g->matrix[i]);
@@ -65,8 +65,8 @@ void _MatUndGraph_matrix_destroy(MatGraph* g) {
 }
 
 
-MatGraph* MatUndGraph_create(int max_vertices) {
-  MatGraph* g = (MatGraph*) calloc(1, sizeof(MatGraph));
+MatUndGraph* MatUndGraph_create(int max_vertices) {
+  MatUndGraph* g = (MatUndGraph*) calloc(1, sizeof(MatUndGraph));
   g->vertices = max_vertices;
   g->edges = 0;
   g->matrix = _MatUndGraph_matrix_create(max_vertices, 0);
@@ -75,20 +75,20 @@ MatGraph* MatUndGraph_create(int max_vertices) {
 
 // cria um grafo com todos os vértices conectados entre si, até mesmo de
 // a-a
-MatGraph* MatUndGraph_create_complete(int max_vertices) {
-  MatGraph* g = (MatGraph*) calloc(1, sizeof(MatGraph));
+MatUndGraph* MatUndGraph_create_complete(int max_vertices) {
+  MatUndGraph* g = (MatUndGraph*) calloc(1, sizeof(MatUndGraph));
   g->vertices = max_vertices;
   g->edges = 0;
   g->matrix = _MatUndGraph_matrix_create(max_vertices, 1);
   return g;
 }
 
-void MatUndGraph_destroy(MatGraph* g) {
+void MatUndGraph_destroy(MatUndGraph* g) {
   _MatUndGraph_matrix_destroy(g);
   free(g);
 }
 
-void MatUndGraph_insert_edge(MatGraph* g, Vertex a, Vertex b) {
+void MatUndGraph_insert_edge(MatUndGraph* g, Vertex a, Vertex b) {
   if (g->matrix[a][b] == 0)
     ++g->edges;
   
@@ -96,8 +96,8 @@ void MatUndGraph_insert_edge(MatGraph* g, Vertex a, Vertex b) {
   g->matrix[b][a] = 1;
 }
 
-// void MatUndGraph_remove_edge(MatGraph* g, Edge e) {
-void MatUndGraph_remove_edge(MatGraph* g, Vertex a, Vertex b) {
+// void MatUndGraph_remove_edge(MatUndGraph* g, Edge e) {
+void MatUndGraph_remove_edge(MatUndGraph* g, Vertex a, Vertex b) {
   if (g->matrix[a][b] == 1)
     --g->edges;
   
@@ -106,7 +106,7 @@ void MatUndGraph_remove_edge(MatGraph* g, Vertex a, Vertex b) {
 }
 
 
-// int MatUndGraph_edges(MatGraph* g, Edge edges[]) {
+// int MatUndGraph_edges(MatUndGraph* g, Edge edges[]) {
 //   int a, b, edges_count = 0;
 //   for (a = 0; a < g->edges; a++) {
 //     for (b = a+1; b < g->edges; b++) {
@@ -119,11 +119,11 @@ void MatUndGraph_remove_edge(MatGraph* g, Vertex a, Vertex b) {
 //   return edges_count;
 // }
 
-// MatGraph MatUndGraph_copy(MatGraph* g) {
+// MatUndGraph MatUndGraph_copy(MatUndGraph* g) {
 
 // }
 
-void MatUndGraph_show(MatGraph* g) {
+void MatUndGraph_show(MatUndGraph* g) {
   int i, j;
   for (i = 0; i < g->vertices; i++) {
     printf("%2d:", i);

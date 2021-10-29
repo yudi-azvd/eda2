@@ -65,7 +65,9 @@ tmp
 *.tmp.c
 *.submit.c
 !*.out.exp
-*Zone.Identifier
+
+resources/*
+!resources/.gitkeep
 
 **/test.py
 !/test.py
