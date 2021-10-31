@@ -3,7 +3,9 @@
 
 #include "matundgraph.h"
 
-TEST_CASE("matundgraph create and destroy")
+TEST_SUITE_BEGIN("matundgraph");
+
+TEST_CASE("create and destroy")
 {
   MatUndGraph *g = MatUndGraph_create(6);
 
@@ -13,7 +15,7 @@ TEST_CASE("matundgraph create and destroy")
   MatUndGraph_destroy(g);
 }
 
-TEST_CASE("matundgraph create complete")
+TEST_CASE("create complete")
 {
   MatUndGraph *g = MatUndGraph_create_complete(7);
 
@@ -24,7 +26,7 @@ TEST_CASE("matundgraph create complete")
   MatUndGraph_destroy(g);
 }
 
-TEST_CASE("matundgraph removing edges from complete graph")
+TEST_CASE("removing edges from complete graph")
 {
   int egdes_count = 6, vertices_count = 4;
   MatUndGraph *g = MatUndGraph_create_complete(vertices_count);
@@ -45,7 +47,7 @@ TEST_CASE("matundgraph removing edges from complete graph")
   MatUndGraph_destroy(g);
 }
 
-TEST_CASE("matundgraph insert")
+TEST_CASE("insert")
 {
   MatUndGraph *g = MatUndGraph_create(3);
 
@@ -58,7 +60,7 @@ TEST_CASE("matundgraph insert")
   MatUndGraph_destroy(g);
 }
 
-TEST_CASE("matundgraph several inserts")
+TEST_CASE("several inserts")
 {
   MatUndGraph *g = MatUndGraph_create(10);
 
@@ -71,7 +73,7 @@ TEST_CASE("matundgraph several inserts")
   MatUndGraph_destroy(g);
 }
 
-TEST_CASE("matundgraph copy")
+TEST_CASE("copy")
 {
   MatUndGraph *graph_a = MatUndGraph_create(5);
 
@@ -89,3 +91,42 @@ TEST_CASE("matundgraph copy")
   MatUndGraph_destroy(graph_a);
   MatUndGraph_destroy(graph_b);
 }
+
+TEST_CASE("copy modifications do not alter original")
+{
+  MatUndGraph *graph_a = MatUndGraph_create(5);
+
+  MatUndGraph_insert_edge(graph_a, 0, 1);
+  MatUndGraph_insert_edge(graph_a, 0, 2);
+  MatUndGraph_insert_edge(graph_a, 0, 3);
+  int graph_a_edges_count = MatUndGraph_edges_count(graph_a);
+
+  MatUndGraph *graph_b = MatUndGraph_copy(graph_a);
+
+  MatUndGraph_remove_edge(graph_b, 0, 1);
+  MatUndGraph_remove_edge(graph_b, 0, 2);
+
+  CHECK(MatUndGraph_edges_count(graph_a) == graph_a_edges_count);
+  CHECK(!MatUndGraph_equal(graph_a, graph_b));
+
+  MatUndGraph_destroy(graph_a);
+  MatUndGraph_destroy(graph_b);
+}
+
+TEST_CASE("has edge")
+{
+  MatUndGraph *g = MatUndGraph_create(5);
+
+  MatUndGraph_insert_edge(g, 0, 1);
+  MatUndGraph_insert_edge(g, 0, 2);
+  MatUndGraph_insert_edge(g, 0, 3);
+
+  CHECK(MatUndGraph_has_edge(g, 0, 1));
+  CHECK(MatUndGraph_has_edge(g, 0, 2));
+  CHECK(MatUndGraph_has_edge(g, 0, 3));
+  CHECK_FALSE(MatUndGraph_has_edge(g, 0, 4));
+
+  MatUndGraph_destroy(g);
+}
+
+TEST_SUITE_END();

@@ -194,6 +194,11 @@ uint8_t MatUndGraph_equal(MatUndGraph *a, MatUndGraph *b)
   return 1;
 }
 
+uint8_t MatUndGraph_has_edge(MatUndGraph *g, Vertex a, Vertex b) {
+  // não precisa checar b-a pq é um grafo não direcionado.
+  return g->matrix[a][b] == __CONNECTED;
+}
+
 void MatUndGraph_show(MatUndGraph *g)
 {
   int i, j;
