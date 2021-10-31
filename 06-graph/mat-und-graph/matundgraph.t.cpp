@@ -2,6 +2,7 @@
 #include "../../lib/doctest.h"
 
 #include "matundgraph.h"
+#include "matundgraph_test_helper.h"
 
 TEST_SUITE_BEGIN("matundgraph");
 
@@ -128,5 +129,69 @@ TEST_CASE("has edge")
 
   MatUndGraph_destroy(g);
 }
+
+TEST_CASE("graph edges")
+{
+  MatUndGraph *g = MatUndGraph_create(5);
+
+  int edges_count = -1;
+  Edge *edges = MatUndGraph_edges(g, &edges_count);
+  free(edges);
+
+  CHECK(edges_count == 0);
+
+  MatUndGraph_insert_edge(g, 0, 1);
+  MatUndGraph_insert_edge(g, 0, 2);
+  MatUndGraph_insert_edge(g, 0, 3);
+
+  edges = MatUndGraph_edges(g, &edges_count);
+  CHECK(edges_count == 3);
+  CHECK(edges_contains(edges, edges_count, 0, 1) == 1);
+  CHECK(edges_contains(edges, edges_count, 1, 0) == 1);
+  CHECK(edges_contains(edges, edges_count, 0, 2) == 1);
+  CHECK(edges_contains(edges, edges_count, 3, 0) == 1);
+
+  // Essas arestas não devem existir!
+  CHECK(edges_contains(edges, edges_count, 2, 3) == 0);
+  CHECK(edges_contains(edges, edges_count, 3, 2) == 0);
+  CHECK(edges_contains(edges, edges_count, 1, 3) == 0);
+
+  free(edges);
+  MatUndGraph_destroy(g);
+}
+
+
+TEST_CASE("adjacent to")
+{
+  MatUndGraph *g = MatUndGraph_create(5);
+
+  MatUndGraph_insert_edge(g, 0, 1);
+  MatUndGraph_insert_edge(g, 0, 2);
+  MatUndGraph_insert_edge(g, 0, 3);
+  MatUndGraph_insert_edge(g, 4, 3);
+
+  int adjacent_to_0_size = -1;
+  Vertex* adjacent_to_0 = MatUndGraph_adjacent_to(g, 0, &adjacent_to_0_size);
+  CHECK(adjacent_to_0_size == 3);
+  CHECK(adjacent_contains(adjacent_to_0, adjacent_to_0_size, 1));
+  CHECK(adjacent_contains(adjacent_to_0, adjacent_to_0_size, 2));
+  CHECK(adjacent_contains(adjacent_to_0, adjacent_to_0_size, 3));
+
+  CHECK_FALSE(adjacent_contains(adjacent_to_0, adjacent_to_0_size, 4));
+
+  int adjacent_to_4_size = -1;
+  Vertex* adjacent_to_4 = MatUndGraph_adjacent_to(g, 4, &adjacent_to_4_size);
+  CHECK(adjacent_to_4_size == 1);
+  CHECK(adjacent_contains(adjacent_to_4, adjacent_to_4_size, 3));
+
+  CHECK_FALSE(adjacent_contains(adjacent_to_4, adjacent_to_4_size, 0));
+  CHECK_FALSE(adjacent_contains(adjacent_to_4, adjacent_to_4_size, 1));
+  CHECK_FALSE(adjacent_contains(adjacent_to_4, adjacent_to_4_size, 2));
+
+  free(adjacent_to_0);
+  free(adjacent_to_4);
+  MatUndGraph_destroy(g);
+}
+
 
 TEST_SUITE_END();

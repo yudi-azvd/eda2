@@ -13,17 +13,22 @@
 // IME USP
 // https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/graphdatastructs.html
 
+typedef int Vertex;
+
 typedef struct Edge
 {
-  int a, b;
+  Vertex a, b;
 } Edge;
-
-typedef uint8_t Vertex;
 
 Edge __MatUndGraph_edge_create(int a, int b)
 {
   Edge e = {a, b};
   return e;
+}
+
+uint8_t UndEdge_equal(Edge e1, Edge e2)
+{
+  return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.b);
 }
 
 #define __CONNECTED 1
@@ -32,23 +37,23 @@ Edge __MatUndGraph_edge_create(int a, int b)
 // Em uma máquina de 64 bits
 typedef struct MatUndGraph
 {
-  int vertices; // número de vértices
-  int edges;    // número de arestas
-  Vertex **matrix;
+  int vertices;     // número de vértices
+  int edges;        // número de arestas
+  uint8_t **matrix; // matrix de booleanos
   // 4 (bytes)
   // 4 (bytes)
   // 8 (bytes)
 } MatUndGraph;
 
 // Não é amigável para a cache da CPU
-Vertex **__MatUndGraph_matrix_create(int max_vertices, int initial_value)
+uint8_t **__MatUndGraph_matrix_create(int max_vertices, int initial_value)
 {
   int i;
-  Vertex **matrix = (Vertex **)malloc(max_vertices * sizeof(Vertex *));
+  uint8_t **matrix = (uint8_t **)malloc(max_vertices * sizeof(uint8_t *));
 
   for (i = 0; i < max_vertices; ++i)
   {
-    matrix[i] = (Vertex *)malloc(max_vertices * sizeof(Vertex));
+    matrix[i] = (uint8_t *)malloc(max_vertices * sizeof(uint8_t));
   }
 
   int j;
@@ -141,21 +146,24 @@ void MatUndGraph_remove_edge(MatUndGraph *g, Vertex a, Vertex b)
   g->matrix[b][a] = __UNCONNECTED;
 }
 
-int MatUndGraph_edges(MatUndGraph *g, Edge edges[])
+Edge *MatUndGraph_edges(MatUndGraph *g, int *edges_count)
 {
-  int a, b, edges_count = 0;
+  int a, b, e_counter = 0;
+  *edges_count = g->edges; // tá certo isso?
+  Edge *edges = (Edge *)calloc(*edges_count, sizeof(Edge));
+
   for (a = 0; a < g->edges; a++)
   {
     for (b = a + 1; b < g->edges; b++)
     {
       if (g->matrix[a][b] == 1)
       {
-        edges[edges_count++] = __MatUndGraph_edge_create(a, b);
+        edges[e_counter++] = __MatUndGraph_edge_create(a, b);
       }
     }
   }
 
-  return edges_count;
+  return edges;
 }
 
 MatUndGraph *MatUndGraph_copy(MatUndGraph *g)
@@ -194,9 +202,23 @@ uint8_t MatUndGraph_equal(MatUndGraph *a, MatUndGraph *b)
   return 1;
 }
 
-uint8_t MatUndGraph_has_edge(MatUndGraph *g, Vertex a, Vertex b) {
+uint8_t MatUndGraph_has_edge(MatUndGraph *g, Vertex a, Vertex b)
+{
   // não precisa checar b-a pq é um grafo não direcionado.
   return g->matrix[a][b] == __CONNECTED;
+}
+
+Vertex *MatUndGraph_adjacent_to(MatUndGraph *g, const Vertex v, int *size)
+{
+  int i, j;
+  *size = 0;
+  Vertex *vertices = (Vertex *)calloc(g->vertices - 1, sizeof(Vertex));
+  for (i = 0; i < g->vertices; i++)
+  {
+    if (g->matrix[v][i] == __CONNECTED)
+      vertices[(*size)++] = i;
+  }
+  return vertices;
 }
 
 void MatUndGraph_show(MatUndGraph *g)

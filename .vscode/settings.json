@@ -1,7 +1,7 @@
 {
   "testMate.cpp.test.advancedExecutables": [
     {
-      "pattern": "**/**/*{test,t}*",
+      "pattern": "**/**/*.t.*",
     }
   ],
   "C_Cpp.autoAddFileAssociations": false,
