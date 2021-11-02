@@ -5,4 +5,5 @@
     }
   ],
   "C_Cpp.autoAddFileAssociations": false,
+  "restructuredtext.pythonRecommendation.disabled": true,
 }

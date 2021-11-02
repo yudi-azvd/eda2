@@ -12,7 +12,7 @@ TEST_CASE("create and destroy")
   CHECK(ListUndGraph_edges_count(g) == 0);
   CHECK(ListUndGraph_vertices_count(g) == 6);
 
-  ListUndGraph_show(g);
+  // ListUndGraph_show(g);
 
   ListUndGraph_destroy(g);
 }
@@ -61,23 +61,23 @@ TEST_CASE("insert")
   ListUndGraph_insert_edge(g, 0, 2);
   CHECK(ListUndGraph_edges_count(g) == 2);
 
-  ListUndGraph_show(g);
+  // ListUndGraph_show(g);
 
   ListUndGraph_destroy(g);
 }
 
-// TEST_CASE("several inserts")
-// {
-//   ListUndGraph *g = ListUndGraph_create(10);
+TEST_CASE("several inserts")
+{
+  ListUndGraph *g = ListUndGraph_create(10);
 
-//   for (size_t i = 0; i < 10; i++)
-//   {
-//     ListUndGraph_insert_edge(g, 0, i);
-//     CHECK(ListUndGraph_destroy(g) == i + 1);
-//   }
+  for (size_t i = 0; i < 10; i++)
+  {
+    ListUndGraph_insert_edge(g, 0, i);
+    CHECK(ListUndGraph_edges_count(g) == i + 1);
+  }
 
-//   ListUndGraph_destroy(g);
-// }
+  ListUndGraph_destroy(g);
+}
 
 // TEST_CASE("copy")
 // {
@@ -85,7 +85,7 @@ TEST_CASE("insert")
 
 //   ListUndGraph_insert_edge(graph_a, 0, 1);
 //   ListUndGraph_insert_edge(graph_a, 0, 2);
-//   ListUndGraph_insert_edge(graph_a, 0ListUndGraph_destroy 3);
+//   ListUndGraph_insert_edge(graph_a, 0, 3);
 
 //   ListUndGraph *graph_b = ListUndGraph_copy(graph_a);
 
@@ -125,7 +125,7 @@ TEST_CASE("insert")
 
 //   ListUndGraph_insert_edge(g, 0, 1);
 //   ListUndGraph_insert_edge(g, 0, 2);
-//   ListUndGraph_insert_edge(g, 0ListUndGraph_destroy 3);
+//   ListUndGraph_insert_edge(g, 0, 3);
 
 //   CHECK(ListUndGraph_has_edge(g, 0, 1));
 //   CHECK(ListUndGraph_has_edge(g, 0, 2));
@@ -165,7 +165,6 @@ TEST_CASE("insert")
 //   ListUndGraph_destroy(g);
 // }
 
-
 // TEST_CASE("adjacent to")
 // {
 //   ListUndGraph *g = ListUndGraph_create(5);
@@ -173,7 +172,7 @@ TEST_CASE("insert")
 //   ListUndGraph_insert_edge(g, 0, 1);
 //   ListUndGraph_insert_edge(g, 0, 2);
 //   ListUndGraph_insert_edge(g, 0, 3);
-//   ListUndGraph_insert_edge(g, 4ListUndGraph_destroy 3);
+//   ListUndGraph_insert_edge(g, 4, 3);
 
 //   int adjacent_to_0_size = -1;
 //   Vertex* adjacent_to_0 = ListUndGraph_adjacent_to(g, 0, &adjacent_to_0_size);
@@ -197,6 +196,5 @@ TEST_CASE("insert")
 //   free(adjacent_to_4);
 //   ListUndGraph_destroy(g);
 // }
-
 
 TEST_SUITE_END();
