@@ -5,7 +5,12 @@
 
 #define NOT_VISITED -1
 
-void __init_visited(int *visited, int size)
+int is_visited(int v)
+{
+  return v != NOT_VISITED;
+}
+
+void init_visited(int *visited, int size)
 {
   for (size_t i = 0; i < size; i++)
   {
@@ -13,12 +18,19 @@ void __init_visited(int *visited, int size)
   }
 }
 
+int *create_visited(int size)
+{
+  int *visited = (int *)malloc(size * sizeof(int));
+  init_visited(visited, size);
+  return visited;
+}
+
 int __MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited, int counter)
 {
-  int i, new_src;
+  int new_src = -1;
   visited[src] = counter++;
 
-  for (i = 0; i < g->vertices; i++)
+  for (new_src = 0; new_src < g->vertices; new_src++)
   {
     if (g->matrix[src][new_src] != 0)
       if (visited[new_src] == NOT_VISITED)
@@ -28,15 +40,10 @@ int __MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited, int counter)
   return counter;
 }
 
-int *MatUndGraph_dfs_r(MatUndGraph *g, Vertex src)
+void MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited)
 {
-  int *visited = (int *)malloc(g->vertices * sizeof(int));
-  __init_visited(visited, g->vertices);
-
   int counter = 0;
   __MatUndGraph_dfs_r(g, src, visited, counter);
-
-  return visited;
 }
 
 #endif // MATUNDGRAPH_SEARCH_H_INCLUDED

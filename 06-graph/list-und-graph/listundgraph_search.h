@@ -25,7 +25,7 @@ int *create_visited(int size)
   return visited;
 }
 
-static int __ListUndGraph_dfs_r(ListUndGraph *g, Vertex src, int *visited, int counter)
+int __ListUndGraph_dfs_r(ListUndGraph *g, Vertex src, int *visited, int counter)
 {
   int new_src = -1;
   visited[src] = counter++;

@@ -47,26 +47,4 @@ void fill_graph_tinyGtxt(ListUndGraph** g) {
   // ListUndGraph_show(g);
 }
 
-// Olhar o grafo em https://youtu.be/pOkjep6hpuA?t=1689
-void fill_graph_tinyGtxt(ListUndGraph** g) {
-  *g = ListUndGraph_create(13);
-  
-  // Olhar em resources/algs4-data/tinyG.txt
-  ListUndGraph_insert_edge(*g, 0, 5);
-  ListUndGraph_insert_edge(*g, 4, 3);
-  ListUndGraph_insert_edge(*g, 0, 1);
-  ListUndGraph_insert_edge(*g, 9, 12);
-  ListUndGraph_insert_edge(*g, 6, 4);
-  ListUndGraph_insert_edge(*g, 5, 4);
-  ListUndGraph_insert_edge(*g, 0, 2);
-  ListUndGraph_insert_edge(*g, 11, 12);
-  ListUndGraph_insert_edge(*g, 9, 10);
-  ListUndGraph_insert_edge(*g, 0, 6);
-  ListUndGraph_insert_edge(*g, 7, 8);
-  ListUndGraph_insert_edge(*g, 9, 11);
-  ListUndGraph_insert_edge(*g, 5, 3);
-
-  // ListUndGraph_show(g);
-}
-
 #endif // LISTUNDGRAPH_TEST_HELPER_H_INCLUDED
