@@ -27,10 +27,10 @@ int *create_visited(int size)
 
 int __MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited, int counter)
 {
-  int new_src = -1;
+  int new_src = 0;
   visited[src] = counter++;
 
-  for (new_src = 0; new_src < g->vertices; new_src++)
+  for (; new_src < g->vertices; new_src++)
   {
     if (g->matrix[src][new_src] != 0)
       if (visited[new_src] == NOT_VISITED)
