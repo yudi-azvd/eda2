@@ -166,6 +166,6 @@ int main()
   read_places_julius_has_been(julius_was_there, M);
   predict_where_julius_will_be(julius_was_there, J, g);
 
-  ListUndGraph_destroy(g);
+  // ListUndGraph_destroy(g);
   return 0;
 }

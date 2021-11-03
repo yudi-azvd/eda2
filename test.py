@@ -55,6 +55,7 @@ def main():
 
     test_cases.append(test_case)
   
+  os.system('rm diff.tmp')
   test_suite_result = ''
   RESULT_COLOR = ''
   sucessed_tc = [tc for tc in test_cases if tc.sucess]
