@@ -18,8 +18,9 @@
       "request": "launch",
       "program": "${fileDirname}/a.out",
       "args": [
+        "-d",
         "<",
-        "samples/00.in"
+        "samples/02.in"
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
