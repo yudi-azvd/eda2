@@ -5,12 +5,20 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+// List Undirected Graph
+
 typedef int Vertex;
+
+typedef struct Edge
+{
+  Vertex a, b;
+} Edge;
+
 
 typedef struct Node
 {
   int vertex;
-  Node *next;
+  struct Node *next;
 } Node;
 
 Node *Node_create(int vertex, Node *next)
