@@ -110,16 +110,6 @@ void MatUndGraph_destroy(MatUndGraph *g)
   free(g);
 }
 
-int MatUndGraph_edges_count(MatUndGraph *g)
-{
-  return g->edges;
-}
-
-int MatUndGraph_vertices_count(MatUndGraph *g)
-{
-  return g->vertices;
-}
-
 void MatUndGraph_insert_edge(MatUndGraph *g, Vertex a, Vertex b)
 {
   if (g->matrix[a][b] == __UNCONNECTED)
@@ -129,90 +119,12 @@ void MatUndGraph_insert_edge(MatUndGraph *g, Vertex a, Vertex b)
   g->matrix[b][a] = __CONNECTED;
 }
 
-// void MatUndGraph_remove_edge(MatUndGraph* g, Edge e) {
-void MatUndGraph_remove_edge(MatUndGraph *g, Vertex a, Vertex b)
-{
-  if (g->matrix[a][b] == __CONNECTED)
-    --g->edges;
-
-  g->matrix[a][b] = __UNCONNECTED;
-  g->matrix[b][a] = __UNCONNECTED;
-}
-
-Edge *MatUndGraph_edges(MatUndGraph *g, int *edges_count)
-{
-  int a, b, e_counter = 0;
-  *edges_count = g->edges; // tá certo isso?
-  Edge *edges = (Edge *)calloc(*edges_count, sizeof(Edge));
-
-  for (a = 0; a < g->edges; a++)
-  {
-    for (b = a + 1; b < g->edges; b++)
-    {
-      if (g->matrix[a][b] == 1)
-      {
-        edges[e_counter++] = __MatUndGraph_edge_create(a, b);
-      }
-    }
-  }
-
-  return edges;
-}
-
-MatUndGraph *MatUndGraph_copy(MatUndGraph *g)
-{
-  MatUndGraph *copy = MatUndGraph_create(g->vertices);
-  copy->edges = MatUndGraph_edges_count(g);
-  copy->vertices = MatUndGraph_vertices_count(g);
-
-  for (size_t i = 0; i < g->vertices; i++)
-  {
-    for (size_t j = i + 1; j < g->vertices; j++)
-    {
-      copy->matrix[i][j] = g->matrix[i][j];
-    }
-  }
-
-  return copy;
-}
-
-uint8_t MatUndGraph_equal(MatUndGraph *a, MatUndGraph *b)
-{
-  if (a->vertices != b->vertices)
-    return 0;
-  if (a->edges != b->edges)
-    return 0;
-
-  for (size_t i = 0; i < a->vertices; i++)
-  {
-    for (size_t j = i + 1; j < a->vertices; j++)
-    {
-      if (a->matrix[i][j] != b->matrix[i][j])
-        return 0;
-    }
-  }
-
-  return 1;
-}
-
 uint8_t MatUndGraph_has_edge(MatUndGraph *g, Vertex a, Vertex b)
 {
   // não precisa checar b-a pq é um grafo não direcionado.
   return g->matrix[a][b] == __CONNECTED;
 }
 
-Vertex *MatUndGraph_adjacent_to(MatUndGraph *g, const Vertex v, int *size)
-{
-  int i, j;
-  *size = 0;
-  Vertex *vertices = (Vertex *)calloc(g->vertices - 1, sizeof(Vertex));
-  for (i = 0; i < g->vertices; i++)
-  {
-    if (g->matrix[v][i] == __CONNECTED)
-      vertices[(*size)++] = i;
-  }
-  return vertices;
-}
 
 void MatUndGraph_show(MatUndGraph *g)
 {
@@ -231,7 +143,6 @@ void MatUndGraph_show(MatUndGraph *g)
 }
 
 #define MAX_VERTICES 2000
-// const int MAX_VERTICES = 2000;
 #define WAS_NOT_THERE 0
 #define WAS_THERE 1
 
