@@ -46,4 +46,23 @@ void MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited)
   __MatUndGraph_dfs_r(g, src, visited, counter);
 }
 
+int MatUndGraph_count_connected_components(MatUndGraph *g)
+{
+  int v, connected_components_count = 0;
+  int *visited = create_visited(g->vertices);
+
+  for (v = 0; v < g->vertices; v++)
+  {
+    if (visited[v] == NOT_VISITED)
+    {
+      MatUndGraph_dfs_r(g, v, visited);
+      connected_components_count++;
+    }
+  }
+
+  free(visited);
+  return connected_components_count;
+}
+
+
 #endif // MATUNDGRAPH_SEARCH_H_INCLUDED

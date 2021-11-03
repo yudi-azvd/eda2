@@ -141,15 +141,15 @@ TEST_CASE("tinyG sedgewick-wayne DFS on 3rd cluster") {
   MatUndGraph_destroy(g);
 }
 
-// TEST_CASE("find connected components tinyG") {
-//   MatUndGraph* g;
-//   fill_graph_tinyGtxt(&g);
+TEST_CASE("find connected components tinyG") {
+  MatUndGraph* g;
+  fill_graph_tinyGtxt(&g);
 
-//   int connected_components = MatUndGraph_count_connected_components(g);
+  int connected_components = MatUndGraph_count_connected_components(g);
 
-//   CHECK(3 == connected_components);
+  CHECK(3 == connected_components);
 
-//   MatUndGraph_destroy(g);
-// }
+  MatUndGraph_destroy(g);
+}
 
 TEST_SUITE_END();
