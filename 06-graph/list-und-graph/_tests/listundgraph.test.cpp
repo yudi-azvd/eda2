@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "../../lib/doctest.h"
+#include "../../../lib/doctest.h"
 
-#include "listundgraph.h"
+#include "../listundgraph.h"
 
 TEST_SUITE_BEGIN("listundgraph");
 

@@ -201,7 +201,8 @@ int main(int argc, char **argv)
   int max_edges_count = g->edges_counts[max_edges_count_vertex];
   int john_vertex_edges_count = g->edges_counts[john_current_vertex];
 
-  if (debug_mode) {
+  if (debug_mode)
+  {
     printf("\n");
     ListUndGraph_show(g);
     printf("\n");
@@ -228,4 +229,7 @@ int main(int argc, char **argv)
 }
 
 // encontrar o agrupamento de cidades com maior quantidade de estradas
-// encontrar o cluster de vértices com maior quantidade de arestas
+
+// encontrar a componente conexa com maior quantidade de arestas
+// dado um vértice, como encontrar a sua componente conexa?
+// dado um componente conexo, como determinar se um vértice está nele?

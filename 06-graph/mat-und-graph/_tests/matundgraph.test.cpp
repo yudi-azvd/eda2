@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "../../lib/doctest.h"
+#include "../../../lib/doctest.h"
 
-#include "matundgraph.h"
+#include "../matundgraph.h"
 #include "matundgraph_test_helper.h"
 
 TEST_SUITE_BEGIN("matundgraph");

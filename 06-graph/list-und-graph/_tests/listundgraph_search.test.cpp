@@ -1,52 +1,52 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "../../lib/doctest.h"
+#include "../../../lib/doctest.h"
 
-#include "matundgraph_test_helper.h"
-#include "matundgraph_search.h"
+#include "../listundgraph_search.h"
+#include "listundgraph_test_helper.h"
 
-TEST_SUITE_BEGIN("matundgraph_search");
+TEST_SUITE_BEGIN("listundgraph_search");
 
 TEST_CASE("tinyCG sedgewick-wayne")
 {
-  MatUndGraph *g;
+  ListUndGraph *g;
   fill_graph_tinyCGtxt(&g);
 
-  CHECK(MatUndGraph_vertices_count(g) == 6);
-  CHECK(MatUndGraph_edges_count(g) == 8);
+  CHECK(ListUndGraph_vertices_count(g) == 6);
+  CHECK(ListUndGraph_edges_count(g) == 8);
 
-  int vertices = MatUndGraph_vertices_count(g);
+  int vertices = ListUndGraph_vertices_count(g);
   int *visited = create_visited(vertices);
 
-  MatUndGraph_dfs_r(g, 0, visited);
+  ListUndGraph_dfs_r(g, 0, visited);
 
   // Ordem em que os vértices foram visitados
-  CHECK(is_visited(visited[0]));
-  CHECK(is_visited(visited[2]));
-  CHECK(is_visited(visited[1]));
-  CHECK(is_visited(visited[3]));
-  CHECK(is_visited(visited[5]));
-  CHECK(is_visited(visited[4]));
+  CHECK(0 == visited[0]);
+  CHECK(1 == visited[2]);
+  CHECK(2 == visited[1]);
+  CHECK(3 == visited[3]);
+  CHECK(4 == visited[5]);
+  CHECK(5 == visited[4]);
 
-  // MatUndGraph_show(g);
+  // ListUndGraph_show(g);
 
   free(visited);
-  MatUndGraph_destroy(g);
+  ListUndGraph_destroy(g);
 }
 
-
-TEST_CASE("tinyG sedgewick-wayne DFS on 1st cluster") {
-  MatUndGraph *g;
+TEST_CASE("tinyG sedgewick-wayne DFS on 1st cluster")
+{
+  ListUndGraph *g;
   fill_graph_tinyGtxt(&g);
 
-  // MatUndGraph_show(g);
+  // ListUndGraph_show(g);
 
-  CHECK(MatUndGraph_vertices_count(g) == 13);
-  CHECK(MatUndGraph_edges_count(g) == 13);
+  CHECK(ListUndGraph_vertices_count(g) == 13);
+  CHECK(ListUndGraph_edges_count(g) == 13);
 
-  int vertices = MatUndGraph_vertices_count(g);
+  int vertices = ListUndGraph_vertices_count(g);
   int *visited = create_visited(vertices);
 
-  MatUndGraph_dfs_r(g, 0, visited);
+  ListUndGraph_dfs_r(g, 0, visited);
 
   // 1st cluster visited
   CHECK(is_visited(visited[0]));
@@ -64,24 +64,23 @@ TEST_CASE("tinyG sedgewick-wayne DFS on 1st cluster") {
   CHECK_FALSE(is_visited(visited[11]));
   CHECK_FALSE(is_visited(visited[12]));
 
-
   free(visited);
-  MatUndGraph_destroy(g);
+  ListUndGraph_destroy(g);
 }
 
-
-TEST_CASE("tinyG sedgewick-wayne DFS on 2nd cluster") {
-  MatUndGraph *g;
+TEST_CASE("tinyG sedgewick-wayne DFS on 2nd cluster")
+{
+  ListUndGraph *g;
   fill_graph_tinyGtxt(&g);
 
-  CHECK(MatUndGraph_vertices_count(g) == 13);
-  CHECK(MatUndGraph_edges_count(g) == 13);
+  CHECK(ListUndGraph_vertices_count(g) == 13);
+  CHECK(ListUndGraph_edges_count(g) == 13);
 
-  int vertices = MatUndGraph_vertices_count(g);
+  int vertices = ListUndGraph_vertices_count(g);
   int *visited = create_visited(vertices);
 
-  MatUndGraph_dfs_r(g, 7, visited);
-  
+  ListUndGraph_dfs_r(g, 7, visited);
+
   // 1st cluster NOT visited
   CHECK_FALSE(is_visited(visited[0]));
   CHECK_FALSE(is_visited(visited[1]));
@@ -102,22 +101,22 @@ TEST_CASE("tinyG sedgewick-wayne DFS on 2nd cluster") {
   CHECK_FALSE(is_visited(visited[12]));
 
   free(visited);
-  MatUndGraph_destroy(g);
+  ListUndGraph_destroy(g);
 }
 
-
-TEST_CASE("tinyG sedgewick-wayne DFS on 3rd cluster") {
-  MatUndGraph *g;
+TEST_CASE("tinyG sedgewick-wayne DFS on 3rd cluster")
+{
+  ListUndGraph *g;
   fill_graph_tinyGtxt(&g);
 
-  CHECK(MatUndGraph_vertices_count(g) == 13);
-  CHECK(MatUndGraph_edges_count(g) == 13);
+  CHECK(ListUndGraph_vertices_count(g) == 13);
+  CHECK(ListUndGraph_edges_count(g) == 13);
 
-  int vertices = MatUndGraph_vertices_count(g);
+  int vertices = ListUndGraph_vertices_count(g);
   int *visited = create_visited(vertices);
 
-  MatUndGraph_dfs_r(g, 12, visited);
-  
+  ListUndGraph_dfs_r(g, 12, visited);
+
   // 1st cluster NOT visited
   CHECK_FALSE(is_visited(visited[0]));
   CHECK_FALSE(is_visited(visited[1]));
@@ -138,18 +137,37 @@ TEST_CASE("tinyG sedgewick-wayne DFS on 3rd cluster") {
   CHECK(is_visited(visited[12]));
 
   free(visited);
-  MatUndGraph_destroy(g);
+  ListUndGraph_destroy(g);
 }
 
-TEST_CASE("find connected components tinyG") {
-  MatUndGraph* g;
+TEST_CASE("find connected components tinyG")
+{
+  ListUndGraph *g;
   fill_graph_tinyGtxt(&g);
 
-  int connected_components = MatUndGraph_count_connected_components(g);
+  int connected_components = ListUndGraph_count_connected_components(g);
 
   CHECK(3 == connected_components);
 
-  MatUndGraph_destroy(g);
+  ListUndGraph_destroy(g);
+}
+
+TEST_CASE("connected components vector tinyG")
+{
+  ListUndGraph *g;
+  fill_graph_tinyGtxt(&g);
+
+  /*
+  ListUndGraphConnComp {
+    Vertex vertices[];
+    int edges_count;
+  }
+
+  LUGConnComp* components = ListUndGraph_connected_components(g, &components_size);
+
+  */
+
+  ListUndGraph_destroy(g);
 }
 
 TEST_SUITE_END();

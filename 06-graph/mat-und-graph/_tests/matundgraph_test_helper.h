@@ -1,7 +1,7 @@
 #ifndef MATUNDGRAPH_TEST_HELPER_H_INCLUDED
 #define MATUNDGRAPH_TEST_HELPER_H_INCLUDED
 
-#include "matundgraph.h"
+#include "../matundgraph.h"
 
 // HELPER
 // HELPER

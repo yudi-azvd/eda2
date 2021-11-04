@@ -1,8 +1,8 @@
 #ifndef LISTUNDGRAPH_TEST_HELPER_H_INCLUDED
 #define LISTUNDGRAPH_TEST_HELPER_H_INCLUDED
 
-#include "listundgraph.h"
-#include "listundgraph_search.h"
+#include "../listundgraph.h"
+#include "../listundgraph_search.h"
 
 // Olhar imagem tinyCG.png
 // Sedgewick Wayne Cap 4: Graphs, Undirected Graphs, DFS, pg 532 no livro
@@ -20,7 +20,7 @@ void fill_graph_tinyCGtxt(ListUndGraph** g) {
   ListUndGraph_insert_edge(*g, 3, 5);
   ListUndGraph_insert_edge(*g, 0, 2);
 
-  // ListUndGraph_show(g);
+  // ListUndGraph_show(*g);
 }
 
 // Olhar imagem tinyG.png
@@ -44,7 +44,19 @@ void fill_graph_tinyGtxt(ListUndGraph** g) {
   ListUndGraph_insert_edge(*g, 9, 11);
   ListUndGraph_insert_edge(*g, 5, 3);
 
-  // ListUndGraph_show(g);
+  // ListUndGraph_show(*g);
+}
+
+void fill_graph_moj_viagem_00in(ListUndGraph** g) {
+  *g = ListUndGraph_create(6);
+  
+  // Olhar em viagem/samples/00.in
+  ListUndGraph_insert_edge(*g, 0, 1);
+  ListUndGraph_insert_edge(*g, 2, 3);
+  ListUndGraph_insert_edge(*g, 2, 4);
+  ListUndGraph_insert_edge(*g, 4, 5);
+
+  // ListUndGraph_show(*g);
 }
 
 #endif // LISTUNDGRAPH_TEST_HELPER_H_INCLUDED
