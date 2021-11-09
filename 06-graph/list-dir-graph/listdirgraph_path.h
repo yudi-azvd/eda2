@@ -1,0 +1,8 @@
+#ifndef LISTDIRGRAPH_PATH_H_INCLUDED
+#define LISTDIRGRAPH_PATH_H_INCLUDED
+
+#include "listdirgraph_search.h"
+
+
+
+#endif // LISTDIRGRAPH_PATH_H_INCLUDED
