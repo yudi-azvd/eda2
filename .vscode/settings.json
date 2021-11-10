@@ -5,6 +5,9 @@
     }
   ],
   "C_Cpp.autoAddFileAssociations": false,
-  "restructuredtext.pythonRecommendation.disabled": true,
-  "restructuredtext.syntaxHighlighting.disabled": true,
+  "todohighlight.include": [
+    "**/*.c",
+    "**/*.cpp",
+    "**/*.md"
+  ]
 }
