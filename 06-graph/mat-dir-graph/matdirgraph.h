@@ -203,7 +203,6 @@ uint8_t MatDirGraph_equal(MatDirGraph *a, MatDirGraph *b)
 
 uint8_t MatDirGraph_has_edge(MatDirGraph *g, Vertex a, Vertex b)
 {
-  // não precisa checar b-a pq é um grafo não direcionado.
   return g->matrix[a][b] == __CONNECTED;
 }
 
