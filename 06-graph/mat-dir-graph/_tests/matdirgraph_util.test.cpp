@@ -92,7 +92,7 @@ TEST_CASE("tinyDG sedgewick-wayne, sources: 1 2 6")
 TEST_CASE("tc create and destroy")
 {
   MatDirGraph *g = MatDirGraph_create(2);
-  TC* tc = TC_of(g);
+  TC* tc = TC_create_from(g);
 
   TC_destroy(tc);
   MatDirGraph_destroy(g);
@@ -108,7 +108,7 @@ TEST_CASE("tc simple example")
   MatDirGraph_insert_edge(g, 2, 3);
   MatDirGraph_insert_edge(g, 0, 2);
 
-  TC* tc = TC_of(g);
+  TC* tc = TC_create_from(g);
 
   CHECK(TC_reaches(tc, 1, 0));
   CHECK(TC_reaches(tc, 1, 2));

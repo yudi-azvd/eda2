@@ -114,32 +114,33 @@ typedef struct TC
 } TC;
 
 // Retorna fecho transitivo de um grafo.
-TC *TC_of(MatDirGraph *g)
+TC *TC_create_from(MatDirGraph *g)
 {
   int s = 0, t = 0, i = 0;
   TC *tc = (TC *)malloc(1 * sizeof(TC));
   tc->tc = (uint8_t *)calloc(g->vertices, sizeof(uint8_t));
   tc->vertices = g->vertices;
+  int vertices = g->vertices;
 
   // a matriz do grafo é a base do fecho transitivo;
-  for (s = 0; s < g->vertices; s++)
+  for (s = 0; s < vertices; s++)
   {
-    for (t = 0; t < g->vertices; t++)
+    for (t = 0; t < vertices; t++)
     {
-      tc->tc[s * g->vertices + t] = g->matrix[s * g->vertices + t];
+      tc->tc[s * vertices + t] = g->matrix[s * vertices + t];
     }
   }
 
   // todo vértice é conectado com ele mesmo
-  for (s = 0; s < g->vertices; s++)
-    tc->tc[s * g->vertices + s] = __CONNECTED;
+  for (s = 0; s < vertices; s++)
+    tc->tc[s * vertices + s] = __CONNECTED;
 
-  for (i = 0; i < g->vertices; ++i)
-    for (s = 0; s < g->vertices; ++s)
-      if (tc->tc[s * g->vertices + i] == __CONNECTED)
-        for (t = 0; t < g->vertices; ++t)
-          if (tc->tc[i * g->vertices + t] == __CONNECTED)
-            tc->tc[s * g->vertices + t] = __CONNECTED;
+  for (i = 0; i < vertices; ++i)
+    for (s = 0; s < vertices; ++s)
+      if (tc->tc[s * vertices + i] == __CONNECTED)
+        for (t = 0; t < vertices; ++t)
+          if (tc->tc[i * vertices + t] == __CONNECTED)
+            tc->tc[s * vertices + t] = __CONNECTED;
   return tc;
 }
 
@@ -174,9 +175,6 @@ void TC_show(TC *tc)
 #define ONE_WAY 1
 #define TWO_WAY 2
 
-// FIXME: otimizar matriz de adjacências: transformá-lo em um
-// vetor de adjacencias. Usar regex pra substituir todo [i*g->vertices+j]
-// vet[i*g.vertices+j]
 int main()
 {
   int vertices, v, w, street_mode = 0;
@@ -191,15 +189,9 @@ int main()
     if (v == 0 && w == 0 && street_mode == 0)
       break;
 
-    if (street_mode == ONE_WAY)
-    {
-      MatDirGraph_insert_edge(g, v, w);
-    }
-    else
-    {
-      MatDirGraph_insert_edge(g, v, w);
+    MatDirGraph_insert_edge(g, v, w);
+    if (street_mode == TWO_WAY)
       MatDirGraph_insert_edge(g, w, v);
-    }
   }
 
   char messages[4][15] = {
@@ -210,7 +202,7 @@ int main()
   };
 
   // calcular fecho transitivo
-  TC *tc = TC_of(g);
+  TC *tc = TC_create_from(g);
   int reaches_first_way, reaches_second_way, index;
   while (scanf("%d %d", &v, &w) != EOF)
   {

@@ -26,13 +26,15 @@ uint8_t UndEdge_equal(Edge e1, Edge e2)
 
 #define __CONNECTED 1
 #define __UNCONNECTED 0
+#define MAX_VERTICES 2000
 
 // Em uma máquina de 64 bits
 typedef struct MatDirGraph
 {
   int vertices;     // número de vértices
   int edges;        // número de arestas
-  uint8_t **matrix; // matrix de booleanos
+  // uint8_t **matrix; // matrix de booleanos
+  uint8_t matrix[MAX_VERTICES][MAX_VERTICES]; // matrix de booleanos
 
   // 4 (bytes)
   // 4 (bytes)
@@ -75,11 +77,6 @@ void __MatDirGraph_matrix_reset_main_diagonal(MatDirGraph *g)
 
 void __MatDirGraph_matrix_destroy(MatDirGraph *g)
 {
-  int i;
-  for (i = 0; i < g->vertices; ++i)
-  {
-    free(g->matrix[i]);
-  }
   free(g->matrix);
 }
 
@@ -88,13 +85,11 @@ MatDirGraph *MatDirGraph_create(int max_vertices)
   MatDirGraph *g = (MatDirGraph *)calloc(1, sizeof(MatDirGraph));
   g->vertices = max_vertices;
   g->edges = 0;
-  g->matrix = __MatDirGraph_matrix_create(max_vertices, __UNCONNECTED);
   return g;
 }
 
 void MatDirGraph_destroy(MatDirGraph *g)
 {
-  __MatDirGraph_matrix_destroy(g);
   free(g);
 }
 
@@ -124,7 +119,7 @@ void MatDirGraph_show(MatDirGraph *g)
 
 typedef struct TC
 {
-  uint8_t **tc;
+  uint8_t tc[MAX_VERTICES][MAX_VERTICES];
   int vertices;
 } TC;
 
@@ -133,14 +128,8 @@ TC *TC_create_from(MatDirGraph *g)
 {
   int s = 0, t = 0, i = 0;
   TC *tc = (TC *)malloc(1 * sizeof(TC));
-  tc->tc = (uint8_t **)malloc(g->vertices * sizeof(uint8_t *));
   tc->vertices = g->vertices;
   int vertices = g->vertices;
-
-  for (; s < vertices; s++)
-  {
-    tc->tc[s] = (uint8_t *)malloc(vertices * sizeof(uint8_t));
-  }
 
   // a matriz do grafo é a base do fecho transitivo;
   for (s = 0; s < vertices; s++)
@@ -167,12 +156,6 @@ TC *TC_create_from(MatDirGraph *g)
 void TC_destroy(TC *tc)
 {
   int i = 0;
-  for (; i < tc->vertices; i++)
-  {
-    free(tc->tc[i]);
-  }
-
-  free(tc->tc);
   free(tc);
 }
 

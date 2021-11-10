@@ -75,35 +75,36 @@ typedef struct TC
 } TC;
 
 // Retorna fecho transitivo de um grafo.
-TC *TC_of(MatDirGraph *g)
+TC *TC_create_from(MatDirGraph *g)
 {
   int s = 0, t = 0, i = 0;
   TC *tc = (TC *)malloc(1 * sizeof(TC));
   tc->tc = (uint8_t **)calloc(g->vertices, sizeof(uint8_t*));
   tc->vertices = g->vertices;
+  int vertices = g->vertices;
 
-  for (; s < g->vertices; s++)
+  for (; s < vertices; s++)
   {
-    tc->tc[s] = (uint8_t *)calloc(g->vertices, sizeof(uint8_t));
+    tc->tc[s] = (uint8_t *)calloc(vertices, sizeof(uint8_t));
   }
 
   // a matriz do grafo é a base do fecho transitivo;
-  for (s = 0; s < g->vertices; s++)
+  for (s = 0; s < vertices; s++)
   {
-    for (t = 0; t < g->vertices; t++)
+    for (t = 0; t < vertices; t++)
     {
       tc->tc[s][t] = g->matrix[s][t];
     }
   }
 
   // todo vértice é conectado com ele mesmo
-  for (s = 0; s < g->vertices; s++)
+  for (s = 0; s < vertices; s++)
     tc->tc[s][s] = __CONNECTED;
 
-  for (i = 0; i < g->vertices; ++i)
-    for (s = 0; s < g->vertices; ++s)
+  for (i = 0; i < vertices; ++i)
+    for (s = 0; s < vertices; ++s)
       if (tc->tc[s][i] == __CONNECTED)
-        for (t = 0; t < g->vertices; ++t)
+        for (t = 0; t < vertices; ++t)
           if (tc->tc[i][t] == __CONNECTED)
             tc->tc[s][t] = __CONNECTED;
   return tc;
