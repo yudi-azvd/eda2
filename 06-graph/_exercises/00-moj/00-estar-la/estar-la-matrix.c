@@ -26,60 +26,18 @@ uint8_t UndEdge_equal(Edge e1, Edge e2)
 
 #define __CONNECTED 1
 #define __UNCONNECTED 0
+#define MAX_VERTICES 2000
 
 // Em uma máquina de 64 bits
 typedef struct MatUndGraph
 {
-  int vertices;     // número de vértices
-  int edges;        // número de arestas
-  uint8_t **matrix; // matrix de booleanos
-  // 4 (bytes)
-  // 4 (bytes)
-  // 8 (bytes)
+  int vertices;                               // número de vértices
+  int edges;                                  // número de arestas
+  uint8_t matrix[MAX_VERTICES][MAX_VERTICES]; // matrix de booleanos
 } MatUndGraph;
-
-// Não é amigável para a cache da CPU
-uint8_t **__MatUndGraph_matrix_create(int max_vertices, int initial_value)
-{
-  int i;
-  uint8_t **matrix = (uint8_t **)malloc(max_vertices * sizeof(uint8_t *));
-
-  for (i = 0; i < max_vertices; ++i)
-  {
-    matrix[i] = (uint8_t *)malloc(max_vertices * sizeof(uint8_t));
-  }
-
-  int j;
-  for (i = 0; i < max_vertices; ++i)
-  {
-    for (j = 0; j < max_vertices; ++j)
-    {
-      (matrix)[i][j] = initial_value;
-    }
-  }
-
-  return matrix;
-}
-
-void __MatUndGraph_matrix_reset_main_diagonal(MatUndGraph *g)
-{
-  int j, i;
-  for (i = 0; i < g->vertices; ++i)
-  {
-    for (j = i; j < i + 1; ++j)
-    {
-      g->matrix[i][j] = 0;
-    }
-  }
-}
 
 void __MatUndGraph_matrix_destroy(MatUndGraph *g)
 {
-  int i;
-  for (i = 0; i < g->vertices; ++i)
-  {
-    free(g->matrix[i]);
-  }
   free(g->matrix);
 }
 
@@ -88,25 +46,11 @@ MatUndGraph *MatUndGraph_create(int max_vertices)
   MatUndGraph *g = (MatUndGraph *)calloc(1, sizeof(MatUndGraph));
   g->vertices = max_vertices;
   g->edges = 0;
-  g->matrix = __MatUndGraph_matrix_create(max_vertices, __UNCONNECTED);
-  return g;
-}
-
-// cria um grafo com todos os vértices conectados entre si, sem contar
-// com a conexão de um vértice a ele mesmo (ex: a-a)
-MatUndGraph *MatUndGraph_create_complete(int max_vertices)
-{
-  MatUndGraph *g = (MatUndGraph *)calloc(1, sizeof(MatUndGraph));
-  g->vertices = max_vertices;
-  g->edges = max_vertices * (max_vertices - 1) / 2;
-  g->matrix = __MatUndGraph_matrix_create(max_vertices, __CONNECTED);
-  __MatUndGraph_matrix_reset_main_diagonal(g);
   return g;
 }
 
 void MatUndGraph_destroy(MatUndGraph *g)
 {
-  __MatUndGraph_matrix_destroy(g);
   free(g);
 }
 
@@ -121,10 +65,8 @@ void MatUndGraph_insert_edge(MatUndGraph *g, Vertex a, Vertex b)
 
 uint8_t MatUndGraph_has_edge(MatUndGraph *g, Vertex a, Vertex b)
 {
-  // não precisa checar b-a pq é um grafo não direcionado.
   return g->matrix[a][b] == __CONNECTED;
 }
-
 
 void MatUndGraph_show(MatUndGraph *g)
 {
@@ -142,9 +84,8 @@ void MatUndGraph_show(MatUndGraph *g)
   }
 }
 
-#define MAX_VERTICES 2000
-#define WAS_NOT_THERE 0
-#define WAS_THERE 1
+#define WAS_NOT_HERE 0
+#define WAS_HERE 1
 
 typedef struct JuliusPos
 {
@@ -174,7 +115,7 @@ void read_places_julius_has_been(uint8_t julius_was_here[], int M)
   for (i = 0; i < M; i++)
   {
     scanf("%d", &vertex);
-    julius_was_here[vertex] = WAS_THERE;
+    julius_was_here[vertex] = WAS_HERE;
   }
 }
 
@@ -184,7 +125,7 @@ int is_neighbour_to_where_julius_has_been(uint8_t julius_was_here[], MatUndGraph
   for (; i < g->vertices; i++)
   {
     if (g->matrix[v][i] == __CONNECTED)
-      if (julius_was_here[i] == WAS_THERE)
+      if (julius_was_here[i] == WAS_HERE)
         return 1;
   }
 
@@ -193,8 +134,8 @@ int is_neighbour_to_where_julius_has_been(uint8_t julius_was_here[], MatUndGraph
 
 void predict_where_julius_will_be(uint8_t julius_was_there[], int J, MatUndGraph *g)
 {
-  int i, vertex, will_be_there = 0, is_neighbour = 0;
-  for (int i = 0; i < J; i++)
+  int i = 0, vertex, will_be_there = 0, is_neighbour = 0;
+  for (; i < J; i++)
   {
     scanf("%d", &vertex);
 
@@ -209,7 +150,7 @@ int main()
 {
   int N, M, J;
   uint8_t julius_was_there[MAX_VERTICES] =
-      {[0 ... MAX_VERTICES - 1] = WAS_NOT_THERE};
+      {[0 ... MAX_VERTICES - 1] = WAS_NOT_HERE};
 
   scanf("%d %d %d", &N, &M, &J);
 

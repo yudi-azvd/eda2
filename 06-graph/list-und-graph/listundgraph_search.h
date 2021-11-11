@@ -2,6 +2,7 @@
 #define LISTUNDGRAPH_SEARCH_H_INCLUDED
 
 #include "listundgraph.h"
+#include "../queue.h"
 
 #define NOT_VISITED -1
 
@@ -48,7 +49,7 @@ void ListUndGraph_dfs_r(ListUndGraph *g, Vertex src, int *visited)
   __ListUndGraph_dfs_r(g, src, visited, counter);
 }
 
-int ListUndGraph_count_connected_components(ListUndGraph *g)
+int ListUndGraph_count_connected_components_dfs(ListUndGraph *g)
 {
   int v, connected_components_count = 0;
   int *visited = create_visited(g->vertices);
@@ -64,6 +65,33 @@ int ListUndGraph_count_connected_components(ListUndGraph *g)
 
   free(visited);
   return connected_components_count;
+}
+
+#define NOT !
+
+void ListUndGraph_bfs(ListUndGraph *g, Vertex src, int *visited)
+{
+  Node *node;
+  int counter = 0, new_src, dst;
+  Queue *q = Queue_create();
+
+  Queue_enq(q, src);
+  visited[src] = counter++;
+
+  while (!Queue_empty(q))
+  {
+    new_src = Queue_deq(q);
+    for (node = g->arr[new_src]; node != NULL; node = node->next)
+    {
+      dst = node->vertex;
+      if (NOT is_visited(visited[dst])) {
+        Queue_enq(q, dst);
+        visited[dst] = counter++;
+      }
+    }
+  }
+
+  Queue_destroy(q);
 }
 
 #endif // LISTUNDGRAPH_SEARCH_H_INCLUDED

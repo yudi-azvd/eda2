@@ -153,7 +153,7 @@ void ListUndGraph_dfs_r(ListUndGraph *g, Vertex src, int *visited)
   __ListUndGraph_dfs_r(g, src, visited, counter);
 }
 
-int ListUndGraph_count_connected_components(ListUndGraph *g)
+int ListUndGraph_count_connected_components_dfs(ListUndGraph *g)
 {
   int v, connected_components_count = 0;
   int *visited = create_visited(g->vertices);
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
     printf(" max edges count vertex: %d\n", max_edges_count_vertex);
     printf("        max edges count: %d\n", max_edges_count);
     printf("\n");
-    printf("#clusters %d\n", ListUndGraph_count_connected_components(g));
+    printf("#clusters %d\n", ListUndGraph_count_connected_components_dfs(g));
   }
 
   if (john_current_vertex == max_edges_count_vertex && max_edges_count == 0)

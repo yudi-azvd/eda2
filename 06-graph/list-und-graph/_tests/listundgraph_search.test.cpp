@@ -145,29 +145,12 @@ TEST_CASE("find connected components tinyG")
   ListUndGraph *g;
   fill_graph_tinyGtxt(&g);
 
-  int connected_components = ListUndGraph_count_connected_components(g);
+  int connected_components = ListUndGraph_count_connected_components_dfs(g);
 
   CHECK(3 == connected_components);
 
   ListUndGraph_destroy(g);
 }
 
-TEST_CASE("connected components vector tinyG")
-{
-  ListUndGraph *g;
-  fill_graph_tinyGtxt(&g);
-
-  /*
-  ListUndGraphConnComp {
-    Vertex vertices[];
-    int edges_count;
-  }
-
-  LUGConnComp* components = ListUndGraph_connected_components(g, &components_size);
-
-  */
-
-  ListUndGraph_destroy(g);
-}
 
 TEST_SUITE_END();
