@@ -8,7 +8,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// List Directed Graph
+// Adjacent Matrix Undirected Graph
+
+// Aula do prof Bruno Ribas
+// https://youtu.be/-CWbqWbNBTQ?t=5888
+
+// IME USP
+// https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/graphdatastructs.html
 
 typedef int Vertex;
 
@@ -17,87 +23,220 @@ typedef struct Edge
   Vertex a, b;
 } Edge;
 
-typedef struct Node
+Edge __MatDirGraph_edge_create(int a, int b)
 {
-  int vertex;
-  struct Node *next;
-} Node;
-
-Node *Node_create(int vertex, Node *next)
-{
-  Node *node = (Node *)calloc(1, sizeof(Node));
-  node->vertex = vertex;
-  node->next = next;
-  return node;
+  Edge e = {a, b};
+  return e;
 }
 
-typedef struct ListDirGraph
+uint8_t UndEdge_equal(Edge e1, Edge e2)
 {
-  int vertices, edges;
-  Node **arr;
-} ListDirGraph;
+  return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.b);
+}
 
-int ListDirGraph_edges_count(ListDirGraph *g)
+#define __CONNECTED 1
+#define __UNCONNECTED 0
+
+// Em uma máquina de 64 bits
+typedef struct MatDirGraph
+{
+  int vertices;     // número de vértices
+  int edges;        // número de arestas
+  uint8_t **matrix; // matrix de booleanos
+
+  // 4 (bytes)
+  // 4 (bytes)
+  // 8 (bytes)
+} MatDirGraph;
+
+// Não é amigável para a cache da CPU
+uint8_t **__MatDirGraph_matrix_create(int max_vertices, int initial_value)
+{
+  int i;
+  uint8_t **matrix = (uint8_t **)malloc(max_vertices * sizeof(uint8_t *));
+
+  for (i = 0; i < max_vertices; ++i)
+  {
+    matrix[i] = (uint8_t *)malloc(max_vertices * sizeof(uint8_t));
+  }
+
+  int j;
+  for (i = 0; i < max_vertices; ++i)
+  {
+    for (j = 0; j < max_vertices; ++j)
+    {
+      (matrix)[i][j] = initial_value;
+    }
+  }
+
+  return matrix;
+}
+
+void __MatDirGraph_matrix_reset_main_diagonal(MatDirGraph *g)
+{
+  int j, i;
+  for (i = 0; i < g->vertices; ++i)
+  {
+    for (j = i; j < i + 1; ++j)
+    {
+      g->matrix[i][j] = 0;
+    }
+  }
+}
+
+void __MatDirGraph_matrix_destroy(MatDirGraph *g)
+{
+  int i;
+  for (i = 0; i < g->vertices; ++i)
+  {
+    free(g->matrix[i]);
+  }
+  free(g->matrix);
+}
+
+MatDirGraph *MatDirGraph_create(int max_vertices)
+{
+  MatDirGraph *g = (MatDirGraph *)calloc(1, sizeof(MatDirGraph));
+  g->vertices = max_vertices;
+  g->edges = 0;
+  g->matrix = __MatDirGraph_matrix_create(max_vertices, __UNCONNECTED);
+  return g;
+}
+
+// cria um grafo com todos os vértices conectados entre si, sem contar
+// com a conexão de um vértice a ele mesmo (ex: a-a)
+MatDirGraph *MatDirGraph_create_complete(int max_vertices)
+{
+  MatDirGraph *g = (MatDirGraph *)calloc(1, sizeof(MatDirGraph));
+  g->vertices = max_vertices;
+  g->edges = max_vertices * (max_vertices - 1) / 2;
+  g->matrix = __MatDirGraph_matrix_create(max_vertices, __CONNECTED);
+  __MatDirGraph_matrix_reset_main_diagonal(g);
+  return g;
+}
+
+void MatDirGraph_destroy(MatDirGraph *g)
+{
+  __MatDirGraph_matrix_destroy(g);
+  free(g);
+}
+
+int MatDirGraph_edges_count(MatDirGraph *g)
 {
   return g->edges;
 }
 
-int ListDirGraph_vertices_count(ListDirGraph *g)
+int MatDirGraph_vertices_count(MatDirGraph *g)
 {
   return g->vertices;
 }
 
-ListDirGraph *ListDirGraph_create(int max_vertices)
+void MatDirGraph_insert_edge(MatDirGraph *g, Vertex a, Vertex b)
 {
-  ListDirGraph *g = (ListDirGraph *)calloc(1, sizeof(ListDirGraph));
-  g->edges = 0;
-  g->vertices = max_vertices;
-  g->arr = (Node **)calloc(max_vertices, sizeof(Node *));
-  return g;
+  if (g->matrix[a][b] == __UNCONNECTED)
+    ++g->edges;
+
+  g->matrix[a][b] = __CONNECTED;
 }
 
-void ListDirGraph_destroy(ListDirGraph *g)
+// void MatDirGraph_remove_edge(MatDirGraph* g, Edge e) {
+void MatDirGraph_remove_edge(MatDirGraph *g, Vertex a, Vertex b)
 {
-  Node *aux;
+  if (g->matrix[a][b] == __CONNECTED)
+    --g->edges;
 
-  for (int i = 0; i < g->vertices; i++)
+  g->matrix[a][b] = __UNCONNECTED;
+}
+
+Edge *MatDirGraph_edges(MatDirGraph *g, int *edges_count)
+{
+  int a, b, e_counter = 0;
+  *edges_count = g->edges; // tá certo isso?
+  Edge *edges = (Edge *)calloc(*edges_count, sizeof(Edge));
+
+  for (a = 0; a < g->edges; a++)
   {
-    while (g->arr[i] != NULL)
+    for (b = a + 1; b < g->edges; b++)
     {
-      aux = g->arr[i]->next;
-      free(g->arr[i]);
-      g->arr[i] = aux;
+      if (g->matrix[a][b] == 1)
+      {
+        edges[e_counter++] = __MatDirGraph_edge_create(a, b);
+      }
     }
   }
 
-  free(g->arr);
-  free(g);
+  return edges;
 }
 
-void ListDirGraph_insert_edge(ListDirGraph *g, Vertex a, Vertex b)
+MatDirGraph *MatDirGraph_copy(MatDirGraph *g)
 {
-  g->edges++;
-  g->arr[a] = Node_create(b, g->arr[a]);
-}
+  MatDirGraph *copy = MatDirGraph_create(g->vertices);
+  copy->edges = MatDirGraph_edges_count(g);
+  copy->vertices = MatDirGraph_vertices_count(g);
 
-void ListDirGraph_show(ListDirGraph *g)
-{
-  printf("vertices: %d, edges: %d\n", g->vertices, g->edges);
-  Node *node;
-  for (int i = 0; i < g->vertices; i++)
+  for (size_t i = 0; i < g->vertices; i++)
   {
-    printf("v %d: ", i);
-
-    node = g->arr[i];
-    while (node != NULL)
+    for (size_t j = i + 1; j < g->vertices; j++)
     {
-      printf(" %d", node->vertex);
-      node = node->next;
+      copy->matrix[i][j] = g->matrix[i][j];
+    }
+  }
+
+  return copy;
+}
+
+uint8_t MatDirGraph_equal(MatDirGraph *a, MatDirGraph *b)
+{
+  if (a->vertices != b->vertices)
+    return 0;
+  if (a->edges != b->edges)
+    return 0;
+
+  for (size_t i = 0; i < a->vertices; i++)
+  {
+    for (size_t j = i + 1; j < a->vertices; j++)
+    {
+      if (a->matrix[i][j] != b->matrix[i][j])
+        return 0;
+    }
+  }
+
+  return 1;
+}
+
+uint8_t MatDirGraph_has_edge(MatDirGraph *g, Vertex a, Vertex b)
+{
+  return g->matrix[a][b] == __CONNECTED;
+}
+
+Vertex *MatDirGraph_adjacent_to(MatDirGraph *g, const Vertex v, int *size)
+{
+  int i;
+  *size = 0;
+  Vertex *vertices = (Vertex *)calloc(g->vertices - 1, sizeof(Vertex));
+  for (i = 0; i < g->vertices; i++)
+  {
+    if (g->matrix[v][i] == __CONNECTED)
+      vertices[(*size)++] = i;
+  }
+  return vertices;
+}
+
+void MatDirGraph_show(MatDirGraph *g)
+{
+  int i, j;
+  printf("%d vertices, %d edges\n", g->vertices, g->edges);
+  for (i = 0; i < g->vertices; i++)
+  {
+    printf("%2d:", i);
+    for (j = 0; j < g->vertices; j++)
+    {
+      if (g->matrix[i][j] == 1)
+        printf(" %2d", j);
     }
     printf("\n");
   }
 }
-
 
 #define NOT_VISITED -1
 
@@ -108,7 +247,7 @@ int is_visited(int v)
 
 void init_visited(int *visited, int size)
 {
-  for (int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     visited[i] = NOT_VISITED;
   }
@@ -121,30 +260,28 @@ int *create_visited(int size)
   return visited;
 }
 
-int __ListDirGraph_dfs_r(ListDirGraph *g, Vertex src, int *visited, int counter)
+int __MatDirGraph_dfs_r(MatDirGraph *g, Vertex src, int *visited, int counter)
 {
-  int new_src = -1;
+  int new_src = 0;
   visited[src] = counter++;
-  Node *node = g->arr[src];
 
-  for (; node != NULL; node = node->next)
+  for (; new_src < g->vertices; new_src++)
   {
-    new_src = node->vertex;
-    if (visited[new_src] == NOT_VISITED)
-      counter = __ListDirGraph_dfs_r(g, new_src, visited, counter);
+    if (g->matrix[src][new_src] != 0)
+      if (visited[new_src] == NOT_VISITED)
+        counter = __MatDirGraph_dfs_r(g, new_src, visited, counter);
   }
 
   return counter;
 }
 
-void ListDirGraph_dfs_r(ListDirGraph *g, Vertex src, int *visited)
+void MatDirGraph_dfs_r(MatDirGraph *g, Vertex src, int *visited)
 {
-  // counter na vdd seria uma variável de instância em um objeto DFSSearch
   int counter = 0;
-  __ListDirGraph_dfs_r(g, src, visited, counter);
+  __MatDirGraph_dfs_r(g, src, visited, counter);
 }
 
-int ListDirGraph_count_connected_components(ListDirGraph *g)
+int MatDirGraph_count_connected_components(MatDirGraph *g)
 {
   int v, connected_components_count = 0;
   int *visited = create_visited(g->vertices);
@@ -153,7 +290,7 @@ int ListDirGraph_count_connected_components(ListDirGraph *g)
   {
     if (visited[v] == NOT_VISITED)
     {
-      ListDirGraph_dfs_r(g, v, visited);
+      MatDirGraph_dfs_r(g, v, visited);
       connected_components_count++;
     }
   }
@@ -162,14 +299,113 @@ int ListDirGraph_count_connected_components(ListDirGraph *g)
   return connected_components_count;
 }
 
+////////////////////////////////////////////////////////////
+////// FECHO TRANSITIVO
+////////////////////////////////////////////////////////////
+
+typedef struct TC
+{
+  uint8_t **tc;
+  int vertices;
+} TC;
+
+// Retorna fecho transitivo de um grafo.
+TC *TC_create_from(MatDirGraph *g)
+{
+  int s = 0, t = 0, i = 0;
+  TC *tc = (TC *)malloc(1 * sizeof(TC));
+  tc->tc = (uint8_t **)calloc(g->vertices, sizeof(uint8_t *));
+  tc->vertices = g->vertices;
+  int vertices = g->vertices;
+
+  for (; s < vertices; s++)
+  {
+    tc->tc[s] = (uint8_t *)calloc(vertices, sizeof(uint8_t));
+  }
+
+  // a matriz do grafo é a base do fecho transitivo;
+  for (s = 0; s < vertices; s++)
+  {
+    for (t = 0; t < vertices; t++)
+    {
+      tc->tc[s][t] = g->matrix[s][t];
+    }
+  }
+
+  // todo vértice é conectado com ele mesmo
+  // for (s = 0; s < vertices; s++)
+  //   tc->tc[s][s] = __CONNECTED;
+
+  for (i = 0; i < vertices; ++i)
+    for (s = 0; s < vertices; ++s)
+      if (tc->tc[s][i] == __CONNECTED)
+        for (t = 0; t < vertices; ++t)
+          if (tc->tc[i][t] == __CONNECTED)
+            tc->tc[s][t] = __CONNECTED;
+  return tc;
+}
+
+void TC_destroy(TC *tc)
+{
+  int i = 0;
+  for (; i < tc->vertices; i++)
+  {
+    free(tc->tc[i]);
+  }
+
+  free(tc->tc);
+  free(tc);
+}
+
+uint8_t TC_reaches(TC *tc, Vertex s, Vertex t)
+{
+  return tc->tc[s][t] == __CONNECTED;
+}
+
+void TC_show(TC *tc)
+{
+  int i, j;
+  printf("TC: %d vertices\n", tc->vertices);
+  for (i = 0; i < tc->vertices; i++)
+  {
+    printf("%2d:", i);
+    for (j = 0; j < tc->vertices; j++)
+    {
+      if (tc->tc[i][j] == 1)
+        printf(" %2d", j);
+    }
+    printf("\n");
+    fflush(stdout);
+  }
+}
+
+int graph_is_connected(MatDirGraph *g)
+{ 
+  int i, j;
+  TC *tc = TC_create_from(g);
+  // MatDirGraph_show(g);
+  // TC_show(tc);
+  for (i = 0; i < g->vertices; i++)
+  {
+    for (j = 0; j < g->vertices; j++)
+    {
+      if (!TC_reaches(tc, i, j))
+        return 0;
+    }
+  }
+
+  TC_destroy(tc);
+  return 1;
+}
+
 #define TWO_WAY 2
 
 int main()
 {
   int i, vertices = 0, lines = 0;
-  int v, w, street_mode = 0, connected_components_count;
+  int v, w, street_mode = 0;
 
-  ListDirGraph* g;
+  MatDirGraph *g;
 
   while (1)
   {
@@ -178,27 +414,22 @@ int main()
     if (vertices == 0 && lines == 0)
       break;
 
-    g = ListDirGraph_create(vertices);
+    g = MatDirGraph_create(vertices);
 
     for (i = 0; i < lines; i++)
     {
       scanf("%d %d %d", &v, &w, &street_mode);
 
-      ListDirGraph_insert_edge(g, v-1, w-1);
-      if (street_mode == TWO_WAY) {
-        ListDirGraph_insert_edge(g, w-1, v-1);
+      MatDirGraph_insert_edge(g, v - 1, w - 1);
+      if (street_mode == TWO_WAY)
+      {
+        MatDirGraph_insert_edge(g, w - 1, v - 1);
       }
     }
-    
-    connected_components_count = -1;
-    connected_components_count = ListDirGraph_count_connected_components(g);
 
-    // tc = TC_of(g);
-    // for i = [0, g.vertices]
-    //    for j = [i+1, g.vertices]
-    //      TC_has_edge(tc, i, j)
+    printf("%d\n", graph_is_connected(g));
 
-    ListDirGraph_destroy(g);
+    MatDirGraph_destroy(g);
   }
 
   return 0;
