@@ -162,10 +162,12 @@ int ListDirGraph_count_connected_components(ListDirGraph *g)
   return connected_components_count;
 }
 
+#define TWO_WAY 2
+
 int main()
 {
   int i, vertices = 0, lines = 0;
-  int v, w, is_one_way = 0, connected_components_count;
+  int v, w, street_mode = 0, connected_components_count;
 
   ListDirGraph* g;
 
@@ -180,13 +182,10 @@ int main()
 
     for (i = 0; i < lines; i++)
     {
-      scanf("%d %d %d", &v, &w, &is_one_way);
+      scanf("%d %d %d", &v, &w, &street_mode);
 
-      if (is_one_way == 1) {
-        ListDirGraph_insert_edge(g, v-1, w-1);
-      }
-      else {
-        ListDirGraph_insert_edge(g, v-1, w-1);
+      ListDirGraph_insert_edge(g, v-1, w-1);
+      if (street_mode == TWO_WAY) {
         ListDirGraph_insert_edge(g, w-1, v-1);
       }
     }
@@ -194,8 +193,10 @@ int main()
     connected_components_count = -1;
     connected_components_count = ListDirGraph_count_connected_components(g);
 
-    // TÁ ERRADO!!!
-    printf("%d\n", connected_components_count == 1);
+    // tc = TC_of(g);
+    // for i = [0, g.vertices]
+    //    for j = [i+1, g.vertices]
+    //      TC_has_edge(tc, i, j)
 
     ListDirGraph_destroy(g);
   }
