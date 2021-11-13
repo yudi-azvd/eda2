@@ -5,14 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "cwd": "${fileDirname}"
-    },
-    {
       "name": "gcc-9 - Build and debug active file",
       "type": "cppdbg",
       "request": "launch",
@@ -20,7 +12,7 @@
       "args": [
         "-d",
         "<",
-        "samples/00.in"
+        "samples/02.in"
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",

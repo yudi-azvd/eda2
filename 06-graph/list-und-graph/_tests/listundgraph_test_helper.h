@@ -1,6 +1,8 @@
 #ifndef LISTUNDGRAPH_TEST_HELPER_H_INCLUDED
 #define LISTUNDGRAPH_TEST_HELPER_H_INCLUDED
 
+#include <fstream>
+
 #include "../listundgraph.h"
 #include "../listundgraph_search.h"
 
@@ -56,6 +58,49 @@ void fill_graph_moj_viagem_00in(ListUndGraph** g) {
   ListUndGraph_insert_edge(*g, 2, 4);
   ListUndGraph_insert_edge(*g, 4, 5);
 
+  // ListUndGraph_show(*g);
+}
+
+void fill_graph_moj_viagem_01in(ListUndGraph** g) {
+  std::fstream infile("../../_exercises/00-moj/02-viagem/samples/01.in");
+
+  if (!infile.is_open()) {
+    printf("not possible to open file\n");
+    exit(1);
+  }
+
+  int vertices, i = 0, v, w, _;
+
+  infile >> vertices >> _;
+  *g = ListUndGraph_create(vertices);
+  
+  while (!infile.eof())
+  {
+    infile >> v >> w;
+    ListUndGraph_insert_edge(*g, v, w);
+  }
+  // ListUndGraph_show(*g);
+}
+
+
+void fill_graph_moj_viagem_02in(ListUndGraph** g) {
+  std::fstream infile("../../_exercises/00-moj/02-viagem/samples/02.in");
+
+  if (!infile.is_open()) {
+    printf("not possible to open file\n");
+    exit(1);
+  }
+
+  int vertices, i = 0, v, w, _;
+
+  infile >> vertices >> _;
+  *g = ListUndGraph_create(vertices);
+  
+  while (!infile.eof())
+  {
+    infile >> v >> w;
+    ListUndGraph_insert_edge(*g, v, w);
+  }
   // ListUndGraph_show(*g);
 }
 

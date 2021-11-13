@@ -3,7 +3,7 @@
     {
       "type": "cppbuild",
       "label": "C: gcc-9 build active file",
-      "command": "/usr/bin/gcc-9",
+      "command": "/usr/bin/gcc",
       "args": [
         "-g",
         "${file}",
@@ -25,7 +25,7 @@
     {
       "type": "cppbuild",
       "label": "C++: g++ build active file",
-      "command": "/usr/bin/g++-9",
+      "command": "/usr/bin/g++",
       "args": [
         "-g",
         "${file}",

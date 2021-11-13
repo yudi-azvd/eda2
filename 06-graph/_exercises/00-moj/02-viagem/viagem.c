@@ -5,10 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <limits.h>
 
 // List Undirected Graph
 
@@ -130,45 +127,101 @@ int *create_visited(int size)
   return visited;
 }
 
-int __ListUndGraph_dfs_r(ListUndGraph *g, Vertex src, int *visited, int counter)
+typedef struct ConnectedComponent
+{
+  int smallest_vertex, size;
+  Vertex *vertices;
+} ConnectedComponent;
+
+int cmp_cc_size(const void *cc1, const void *cc2)
+{
+  ConnectedComponent c1 = *(ConnectedComponent *)cc1;
+  ConnectedComponent c2 = *(ConnectedComponent *)cc2;
+  if (c1.size == c2.size)
+    return c2.smallest_vertex - c1.smallest_vertex;
+  return c1.size - c2.size;
+}
+
+ConnectedComponent ConnectedComponent_create(int vertices)
+{
+  ConnectedComponent cc; // = (ConnectedComponent *)calloc(1, sizeof(ConnectedComponent));
+  cc.size = 0;
+  cc.smallest_vertex = INT_MAX;
+  cc.vertices = (Vertex *)calloc(vertices, sizeof(Vertex));
+  return cc;
+}
+
+void ConnectedComponent_destroy(ConnectedComponent *cc)
+{
+  free(cc->vertices);
+}
+
+void ConnectedComponent_destroy_array(ConnectedComponent *cc, int size)
+{
+  for (size_t i = 0; i < size; i++)
+  {
+    ConnectedComponent_destroy(&cc[i]);
+  }
+  free(cc);
+}
+
+void ConnectedComponent_add(ConnectedComponent *cc, Vertex v)
+{
+  cc->vertices[cc->size++] = v;
+  if (v < cc->smallest_vertex)
+    cc->smallest_vertex = v;
+}
+
+uint8_t ConnectedComponent_has_edges(ConnectedComponent *cc)
+{
+  return cc->size > 1;
+}
+
+int __ListUndGraph_cc_dfs_r(ListUndGraph *g, Vertex src, int *visited, int counter, ConnectedComponent *cc)
 {
   int new_src = -1;
   visited[src] = counter++;
+  ConnectedComponent_add(cc, src);
   Node *node = g->arr[src];
 
   for (; node != NULL; node = node->next)
   {
     new_src = node->vertex;
     if (visited[new_src] == NOT_VISITED)
-      counter = __ListUndGraph_dfs_r(g, new_src, visited, counter);
+      counter = __ListUndGraph_cc_dfs_r(g, new_src, visited, counter, cc);
   }
 
   return counter;
 }
 
-void ListUndGraph_dfs_r(ListUndGraph *g, Vertex src, int *visited)
+void ListUndGraph_cc_dfs_r(ListUndGraph *g, Vertex src, int *visited, ConnectedComponent *cc)
 {
   // counter na vdd seria uma variável de instância em um objeto DFSSearch
   int counter = 0;
-  __ListUndGraph_dfs_r(g, src, visited, counter);
+  __ListUndGraph_cc_dfs_r(g, src, visited, counter, cc);
 }
 
-int ListUndGraph_count_connected_components_dfs(ListUndGraph *g)
+ConnectedComponent *ListUndGraph_connected_components(ListUndGraph *g, int *cc_size)
 {
-  int v, connected_components_count = 0;
+  int v, cc_index = 0;
   int *visited = create_visited(g->vertices);
+
+  ConnectedComponent *cc =
+      (ConnectedComponent *)calloc(g->vertices, sizeof(ConnectedComponent));
 
   for (v = 0; v < g->vertices; v++)
   {
     if (visited[v] == NOT_VISITED)
     {
-      ListUndGraph_dfs_r(g, v, visited);
-      connected_components_count++;
+      cc[cc_index] = ConnectedComponent_create(g->vertices);
+      ListUndGraph_cc_dfs_r(g, v, visited, &cc[cc_index]);
+      cc_index++;
     }
   }
 
+  *cc_size = cc_index;
   free(visited);
-  return connected_components_count;
+  return cc;
 }
 
 int find_vertex_with_greatest_edges_count(ListUndGraph *g)
@@ -183,9 +236,49 @@ int find_vertex_with_greatest_edges_count(ListUndGraph *g)
   return max_index;
 }
 
+int is_john_in_greatest_size_region(Vertex john_v, ConnectedComponent *regions, int region_size)
+{
+  int cc_index = region_size - 1, v;
+  int greatest_region_size = regions[cc_index].size;
+
+  while (regions[cc_index].size == greatest_region_size)
+  {
+
+    for (v = 0; v < regions[cc_index].size; v++)
+    {
+      if (regions[cc_index].vertices[v] == john_v)
+        return 1;
+    }
+
+    cc_index--;
+  }
+
+  return 0;
+}
+
+int find_john_region(Vertex john_v, ConnectedComponent *regions, int region_size)
+{
+  int cc_index = region_size - 1, v;
+  int greatest_region_size = regions[region_size - 1].size;
+  ConnectedComponent c;
+
+  for (; cc_index >= 0; cc_index--)
+  {
+    c = regions[cc_index];
+
+    for (v = 0; v < c.size; v++)
+    {
+      if (c.vertices[v] == john_v)
+        return cc_index;
+    }
+  }
+
+  return -1;
+}
+
 int main(int argc, char **argv)
 {
-  int debug_mode = argc > 1 ? 1 : 0;
+  int debug_mode = argc > 1;
   int v, w, john_current_vertex, max_vertices;
 
   scanf("%d %d", &max_vertices, &john_current_vertex);
@@ -197,39 +290,45 @@ int main(int argc, char **argv)
     ListUndGraph_insert_edge(g, v, w);
   }
 
-  int max_edges_count_vertex = find_vertex_with_greatest_edges_count(g);
-  int max_edges_count = g->edges_counts[max_edges_count_vertex];
-  int john_vertex_edges_count = g->edges_counts[john_current_vertex];
+  int cc_size = -1;
+  ConnectedComponent *cc = ListUndGraph_connected_components(g, &cc_size);
+  qsort(cc, cc_size, sizeof(ConnectedComponent), cmp_cc_size);
+
+  int john_region = find_john_region(john_current_vertex, cc, cc_size);
+  int john_is_in_greatest_region =
+      is_john_in_greatest_size_region(john_current_vertex, cc, cc_size);
 
   if (debug_mode)
   {
     printf("\n");
     ListUndGraph_show(g);
     printf("\n");
-    printf("            john vertex: %d\n", john_current_vertex);
-    printf("john vertex edges count: %d\n", john_vertex_edges_count);
-    printf(" max edges count vertex: %d\n", max_edges_count_vertex);
-    printf("        max edges count: %d\n", max_edges_count);
+    printf("               john vertex: %d\n", john_current_vertex);
+    printf("               john region: %d\n", john_region);
+    printf("john is in greatest region: %d\n", john_is_in_greatest_region);
     printf("\n");
-    printf("#clusters %d\n", ListUndGraph_count_connected_components_dfs(g));
+    printf("                  #regiões: %d\n", cc_size);
   }
 
-  if (john_current_vertex == max_edges_count_vertex && max_edges_count == 0)
-    printf("Fique em casa\n");
-  else if (john_current_vertex == max_edges_count_vertex && max_edges_count > 0)
-    printf("Bora pra estrada\n");
-  else if (max_edges_count_vertex > john_current_vertex)
-    printf("Vamos para %d\n", max_edges_count_vertex);
-  else
+  if (john_is_in_greatest_region && !ConnectedComponent_has_edges(&cc[john_region]))
   {
+    printf("Fique em casa\n");
+  }
+  else if (john_is_in_greatest_region)
+  {
+    printf("Bora pra estrada\n");
+  }
+  else {
+    printf("Vamos para %d\n", cc[cc_size-1].smallest_vertex);
   }
 
-  ListUndGraph_destroy(g);
+  // ConnectedComponent_destroy_array(cc, cc_size);
+  // ListUndGraph_destroy(g);
   return 0;
 }
 
-// encontrar o agrupamento de cidades com maior quantidade de estradas
+// !!! encontrar o agrupamento de cidades com maior quantidade de cidades !!!
 
-// encontrar a componente conexa com maior quantidade de arestas
+// encontrar a componente conexa com maior quantidade de vértices
 // dado um vértice, como encontrar a sua componente conexa?
 // dado um componente conexo, como determinar se um vértice está nele?

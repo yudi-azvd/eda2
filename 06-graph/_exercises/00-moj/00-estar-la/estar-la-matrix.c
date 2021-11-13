@@ -8,22 +8,6 @@
 
 typedef int Vertex;
 
-typedef struct Edge
-{
-  Vertex a, b;
-} Edge;
-
-Edge __MatUndGraph_edge_create(int a, int b)
-{
-  Edge e = {a, b};
-  return e;
-}
-
-uint8_t UndEdge_equal(Edge e1, Edge e2)
-{
-  return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.b);
-}
-
 #define __CONNECTED 1
 #define __UNCONNECTED 0
 #define MAX_VERTICES 2000
@@ -121,45 +105,46 @@ void read_places_julius_has_been(uint8_t julius_was_here[], int M)
 
 int is_neighbour_to_where_julius_has_been(uint8_t julius_was_here[], MatUndGraph *g, Vertex v)
 {
-  int i = 0;
-  for (; i < g->vertices; i++)
+  int neighbour_to_v = 0;
+  for (; neighbour_to_v < g->vertices; neighbour_to_v++)
   {
-    if (g->matrix[v][i] == __CONNECTED)
-      if (julius_was_here[i] == WAS_HERE)
+    if (g->matrix[v][neighbour_to_v] == __CONNECTED)
+      if (julius_was_here[neighbour_to_v] == WAS_HERE)
         return 1;
   }
 
   return 0;
 }
 
-void predict_where_julius_will_be(uint8_t julius_was_there[], int J, MatUndGraph *g)
+void predict_where_julius_will_be(uint8_t julius_was_here[], int J, MatUndGraph *g)
 {
-  int i = 0, vertex, will_be_there = 0, is_neighbour = 0;
+  int i = 0, vertex, will_be_here = 0, is_neighbour = 0;
   for (; i < J; i++)
   {
     scanf("%d", &vertex);
 
-    is_neighbour = is_neighbour_to_where_julius_has_been(julius_was_there, g, vertex);
-    will_be_there = julius_was_there[vertex] || is_neighbour;
+    will_be_here = julius_was_here[vertex] ||
+                   is_neighbour_to_where_julius_has_been(julius_was_here, g, vertex);
 
-    printf("%s vou estar la\n", will_be_there ? "Eu" : "Nao");
+    printf("%s vou estar la\n", will_be_here ? "Eu" : "Nao");
   }
 }
 
 int main()
 {
   int N, M, J;
-  uint8_t julius_was_there[MAX_VERTICES] =
+  uint8_t julius_was_here[MAX_VERTICES] =
       {[0 ... MAX_VERTICES - 1] = WAS_NOT_HERE};
 
   scanf("%d %d %d", &N, &M, &J);
 
-  MatUndGraph *g = MatUndGraph_create(N);
+  MatUndGraph g;
+  g.vertices = N;
 
-  fill_graph(g, N);
-  read_places_julius_has_been(julius_was_there, M);
-  predict_where_julius_will_be(julius_was_there, J, g);
+  fill_graph(&g, N);
+  read_places_julius_has_been(julius_was_here, M);
+  predict_where_julius_will_be(julius_was_here, J, &g);
 
-  MatUndGraph_destroy(g);
+  // MatUndGraph_destroy(g);
   return 0;
 }
