@@ -84,7 +84,8 @@ void ListUndGraph_bfs(ListUndGraph *g, Vertex src, int *visited)
     for (node = g->arr[new_src]; node != NULL; node = node->next)
     {
       dst = node->vertex;
-      if (NOT is_visited(visited[dst])) {
+      if (NOT is_visited(visited[dst]))
+      {
         Queue_enq(q, dst);
         visited[dst] = counter++;
       }
