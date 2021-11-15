@@ -11,6 +11,7 @@
 #define MAX_ANIMAL_LENGTH 31
 
 #define LPHASHTABLE_INITIAL_CAPACITY 5003
+// #define LPHASHTABLE_INITIAL_CAPACITY 7993
 #define MAX_STRING 31
 
 int hash_str(const char *v, int M)
@@ -69,8 +70,10 @@ void LPHashTable_reset(LPHashTable *ht)
   int i = 0;
   ht->size = 0;
   
-  for (; i < ht->capacity; i++)
-    ht->strings[i][0] = '\0';
+  // for (; i < ht->capacity; i++)
+  //   ht->strings[i][0] = '\0';
+  // tá certo isso?
+  memset(ht->strings, '\0', ht->capacity*MAX_ANIMAL_LENGTH);
 }
 
 int LPHashTable_set(LPHashTable *ht, const char *key)
@@ -136,21 +139,12 @@ typedef struct Edge
   Vertex a, b;
 } Edge;
 
-Edge __MatUndGraph_edge_create(int a, int b)
-{
-  Edge e = {a, b};
-  return e;
-}
-
-uint8_t UndEdge_equal(Edge e1, Edge e2)
-{
-  return (e1.a == e2.a && e1.b == e2.b) || (e1.a == e2.b && e1.b == e2.b);
-}
 
 #define __CONNECTED 1
 #define __UNCONNECTED 0
 
-#define MAX_VERTICES 5000
+// #define MAX_VERTICES 5000
+#define MAX_VERTICES LPHASHTABLE_INITIAL_CAPACITY
 
 // Em uma máquina de 64 bits
 typedef struct MatUndGraph
@@ -161,40 +155,12 @@ typedef struct MatUndGraph
 } MatUndGraph;
 
 // Não é amigável para a cache da CPU
-uint8_t **__MatUndGraph_matrix_reset(uint8_t m[MAX_VERTICES][MAX_VERTICES], int max_vertices, int initial_value)
+uint8_t **__MatUndGraph_matrix_set(uint8_t m[MAX_VERTICES][MAX_VERTICES], int max_vertices, int initial_value)
 {
   int i;
-
   int j;
   for (i = 0; i < max_vertices; ++i)
-  {
-    for (j = 0; j < max_vertices; ++j)
-    {
-      m[i][j] = initial_value;
-    }
-  }
-}
-
-void __MatUndGraph_matrix_reset_main_diagonal(MatUndGraph *g)
-{
-  int j, i;
-  for (i = 0; i < g->vertices; ++i)
-  {
-    for (j = i; j < i + 1; ++j)
-    {
-      g->matrix[i][j] = 0;
-    }
-  }
-}
-
-void __MatUndGraph_matrix_destroy(MatUndGraph *g)
-{
-  int i;
-  for (i = 0; i < g->vertices; ++i)
-  {
-    free(g->matrix[i]);
-  }
-  free(g->matrix);
+    memset(m[i], initial_value, max_vertices);
 }
 
 MatUndGraph *MatUndGraph_create(int max_vertices)
@@ -202,23 +168,13 @@ MatUndGraph *MatUndGraph_create(int max_vertices)
   MatUndGraph *g = (MatUndGraph *)calloc(1, sizeof(MatUndGraph));
   g->vertices = max_vertices;
   g->edges = 0;
-  __MatUndGraph_matrix_reset(g->matrix, max_vertices, __UNCONNECTED);
+  __MatUndGraph_matrix_set(g->matrix, max_vertices, __UNCONNECTED);
   return g;
 }
 
 void MatUndGraph_destroy(MatUndGraph *g)
 {
   free(g);
-}
-
-int MatUndGraph_edges_count(MatUndGraph *g)
-{
-  return g->edges;
-}
-
-int MatUndGraph_vertices_count(MatUndGraph *g)
-{
-  return g->vertices;
 }
 
 void MatUndGraph_insert_edge(MatUndGraph *g, Vertex a, Vertex b)
@@ -228,11 +184,6 @@ void MatUndGraph_insert_edge(MatUndGraph *g, Vertex a, Vertex b)
 
   g->matrix[a][b] = __CONNECTED;
   g->matrix[b][a] = __CONNECTED;
-}
-
-uint8_t MatUndGraph_has_edge(MatUndGraph *g, Vertex a, Vertex b)
-{
-  return g->matrix[a][b] == __CONNECTED;
 }
 
 void MatUndGraph_show(MatUndGraph *g)
@@ -266,7 +217,7 @@ void MatUndGraph_show(MatUndGraph *g)
 
 void MatUndGraph_reset(MatUndGraph *g)
 {
-  __MatUndGraph_matrix_reset(g->matrix, g->vertices, __UNCONNECTED);
+  __MatUndGraph_matrix_set(g->matrix, g->vertices, __UNCONNECTED);
   g->edges = 0;
 }
 
@@ -292,26 +243,27 @@ int *create_visited(int size)
   return visited;
 }
 
-int __MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited, int counter)
+int __MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited, int counter, int *existent_animals, int existent_animals_size)
 {
-  int new_src = 0;
+  int i = 0, new_src;
   visited[src] = counter++;
 
-  for (; new_src < g->vertices; new_src++)
+  for (; i < existent_animals_size; i++)
   {
+    new_src = existent_animals[i];
     if (g->matrix[src][new_src] != 0)
       if (visited[new_src] == NOT_VISITED)
-        counter = __MatUndGraph_dfs_r(g, new_src, visited, counter);
+        counter = __MatUndGraph_dfs_r(g, new_src, visited, counter, existent_animals, existent_animals_size);
   }
 
   return counter;
 }
 
 // Retorna o número de vértices da componente conexa
-int MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited)
+int MatUndGraph_dfs_r(MatUndGraph *g, Vertex src, int *visited, int *existent_animals, int existent_animals_size)
 {
   int counter = 0;
-  counter = __MatUndGraph_dfs_r(g, src, visited, counter);
+  counter = __MatUndGraph_dfs_r(g, src, visited, counter, existent_animals, existent_animals_size);
   return counter;
 }
 
@@ -325,7 +277,7 @@ int MatUndGraph_max_size_connected_component(MatUndGraph *g, int *existent_anima
     v = existent_animals[i];
     if (visited[v] == NOT_VISITED)
     {
-      curr_cc_size = MatUndGraph_dfs_r(g, v, visited);
+      curr_cc_size = MatUndGraph_dfs_r(g, v, visited, existent_animals, existent_animals_size);
       if (curr_cc_size > max_cc_size)
         max_cc_size = curr_cc_size;
     }
@@ -343,40 +295,43 @@ int main(int argc, char const *argv[])
   char animal[MAX_ANIMAL_LENGTH], animal1[MAX_ANIMAL_LENGTH], animal2[MAX_ANIMAL_LENGTH];
   int existent_animals[MAX_ANIMALS];
 
-  MatUndGraph *food_chain = MatUndGraph_create(MAX_ANIMALS);
-  LPHashTable *animals = LPHashTable_create();
+  MatUndGraph *food_chain = MatUndGraph_create(LPHASHTABLE_INITIAL_CAPACITY);
+  // MatUndGraph *food_chain = MatUndGraph_create(MAX_ANIMALS);
+  // LPHashTable *animals = LPHashTable_create();
+  LPHashTable animals;
+  animals.size = 0;
+  animals.capacity = LPHASHTABLE_INITIAL_CAPACITY;
 
   while (scanf("%d %d", &number_of_animals, &number_of_relationships) == 2 && !(number_of_animals == 0 && number_of_relationships == 0))
   {
     for (i = 0; i < number_of_animals; i++)
     {
       scanf("%s", animal);
-      hash = LPHashTable_set(animals, animal);
+      hash = LPHashTable_set(&animals, animal);
       existent_animals[i] = hash;
     }
 
     for (i = 0; i < number_of_relationships; i++)
     {
       scanf("%s %s", animal1, animal2);
-      v = LPHashTable_search(animals, animal1);
-      w = LPHashTable_search(animals, animal2);
+      v = LPHashTable_search(&animals, animal1);
+      w = LPHashTable_search(&animals, animal2);
       MatUndGraph_insert_edge(food_chain, w, v);
     }
 
-    if (debug_mode)
-    {
-      LPHashTable_print(animals);
-      MatUndGraph_show(food_chain);
-    }
+    // if (debug_mode)
+    // {
+    //   LPHashTable_print(&animals);
+    //   MatUndGraph_show(food_chain);
+    // }
 
     max_cc_size = MatUndGraph_max_size_connected_component(food_chain, existent_animals, number_of_animals);
     printf("%d\n", max_cc_size);
 
     MatUndGraph_reset(food_chain);
-    LPHashTable_reset(animals);
+    LPHashTable_reset(&animals);
   }
 
   MatUndGraph_destroy(food_chain);
-  LPHashTable_destroy(animals);
   return 0;
 }
