@@ -12,7 +12,7 @@
       "args": [
         "-d",
         "<",
-        "samples/00-2.in"
+        "samples/01.in"
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",

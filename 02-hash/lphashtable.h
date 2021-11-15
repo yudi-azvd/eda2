@@ -20,7 +20,7 @@ static const LPHashTable_item LPHashTable_null = {0, 0, 0};
 typedef struct LPHashTable {
   int capacity;
   int size;
-  LPHashTable_item* itens;
+  LPHashTable_item* items;
 } LPHashTable;
 
 // Não usar com números negativos kkkk
@@ -37,14 +37,14 @@ LPHashTable* LPHashTable_create() {
 
   ht->size = 0;
   ht->capacity = LPHASHTABLE_INITIAL_CAPACITY;
-  ht->itens = (LPHashTable_item*)
+  ht->items = (LPHashTable_item*)
     calloc(LPHASHTABLE_INITIAL_CAPACITY, sizeof(LPHashTable_item));
 
   return ht;
 }
 
 void LPHashTable_destroy(LPHashTable* ht) {
-  free(ht->itens);
+  free(ht->items);
   free(ht);
 }
 
@@ -56,8 +56,8 @@ void LPHashTable_print(LPHashTable* ht) {
   int i = 0;
   printf("[\n");
   for (; i < ht->capacity; i++) {
-    if (ht->itens[i].is_defined)
-      printf("%3d -> %3d\n", ht->itens[i].key, ht->itens[i].value);
+    if (ht->items[i].is_defined)
+      printf("%3d -> %3d\n", ht->items[i].key, ht->items[i].value);
   }
   printf("[\n");
   
@@ -69,13 +69,13 @@ int LPHashTable_search(LPHashTable* ht, int key) {
   unsigned hashed_key = LPHashTable_hash(key, capacity);
   int iterations = 0, value = 0;
 
-  while (ht->itens[hashed_key].is_defined) {
+  while (ht->items[hashed_key].is_defined) {
     if (iterations == ht->capacity) {
       return 0;
     }
 
-    if (ht->itens[hashed_key].key == key)
-      return ht->itens[hashed_key].value;
+    if (ht->items[hashed_key].key == key)
+      return ht->items[hashed_key].value;
     else  {
       hashed_key = (hashed_key+1) % capacity;
       ++iterations;
@@ -91,10 +91,10 @@ void LPHashTable_set(LPHashTable* ht, int key, int value) {
   int probe, k;
 
   for (probe = 0; probe < capacity; probe++) {
-    k = ht->itens[hashed_key].key;
+    k = ht->items[hashed_key].key;
 
     // se a posição está vaga ou se a chave foi encontrada
-    if (!ht->itens[hashed_key].is_defined || k == key)
+    if (!ht->items[hashed_key].is_defined || k == key)
       // encontramos a posição
       break;
 
@@ -107,10 +107,10 @@ void LPHashTable_set(LPHashTable* ht, int key, int value) {
   }
 
   // if (!ht->itens[hashed_key].is_defined)
-    ht->itens[hashed_key].key = key;
+    ht->items[hashed_key].key = key;
   ht->size++;
-  ht->itens[hashed_key].value = value;
-  ht->itens[hashed_key].is_defined = 1;
+  ht->items[hashed_key].value = value;
+  ht->items[hashed_key].is_defined = 1;
 }
 
 void LPHashTable_unset(LPHashTable* ht, int key) {
