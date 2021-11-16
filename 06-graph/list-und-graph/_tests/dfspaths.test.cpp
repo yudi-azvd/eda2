@@ -4,7 +4,7 @@
 #include "../listundgraph_dfspaths.h"
 #include "listundgraph_test_helper.h"
 
-TEST_SUITE_BEGIN("listundgraph_connectedcomponent");
+TEST_SUITE_BEGIN("listundgraph_dfspaths");
 
 TEST_CASE("create and destroy")
 {
