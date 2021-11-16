@@ -79,26 +79,6 @@ void ListUndGraph_insert_edge(ListUndGraph *g, Vertex a, Vertex b)
   g->arr[b] = Node_create(a, g->arr[b]);
 }
 
-uint8_t ListUndGraph_equal(ListUndGraph *ga, ListUndGraph *gb)
-{
-  if (ga->edges != gb->edges)
-    return 0;
-  if (ga->vertices != gb->vertices)
-    return 0;
-
-  // É um pouco mais complicado que isso.
-  // A ordem dos nós não deve fazer diferença
-  // na igualdade de dois gráficos
-
-  // for (int i = 0; i < ga->vertices; i++)
-  // {
-  //   if (ga->arr[i] != gb->arr[i])
-  //     return 0;
-  // }
-
-  return 1;
-}
-
 ListUndGraph *ListUndGraph_copy(ListUndGraph *original)
 {
   ListUndGraph *copy = ListUndGraph_create(original->vertices);

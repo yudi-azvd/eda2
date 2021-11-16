@@ -10,8 +10,8 @@
 #define MAX_ANIMALS 5000
 #define MAX_ANIMAL_LENGTH 31
 
-#define LPHASHTABLE_INITIAL_CAPACITY 5003
-// #define LPHASHTABLE_INITIAL_CAPACITY 7993
+// #define LPHASHTABLE_INITIAL_CAPACITY 5003
+#define LPHASHTABLE_INITIAL_CAPACITY 7993
 #define MAX_STRING 31
 
 int hash_str(const char *v, int M)
@@ -221,6 +221,22 @@ void MatUndGraph_reset(MatUndGraph *g)
   g->edges = 0;
 }
 
+void MatUndGraph_reset_special(MatUndGraph *g, int* existent_animals, int existent_animals_size)
+{
+  g->edges = 0;
+  int i, j, v, w;
+  for (size_t i = 0; i < existent_animals_size; i++)
+  {
+    v = existent_animals[i];
+    for (size_t j = 0; j < existent_animals_size; j++)
+    {
+      w = existent_animals[j];
+      g->matrix[w][v] = 0;
+    }
+  }
+  
+}
+
 #define NOT_VISITED -1
 
 int is_visited(int v)
@@ -291,7 +307,7 @@ int main(int argc, char const *argv[])
 {
   int debug_mode = argc > 1;
   int i, j, number_of_animals, number_of_relationships;
-  int v, w, max_cc_size = 0, cc_size, hash;
+  int v, w, max_cc_size = 0, hash;
   char animal[MAX_ANIMAL_LENGTH], animal1[MAX_ANIMAL_LENGTH], animal2[MAX_ANIMAL_LENGTH];
   int existent_animals[MAX_ANIMALS];
 
@@ -307,16 +323,19 @@ int main(int argc, char const *argv[])
     for (i = 0; i < number_of_animals; i++)
     {
       scanf("%s", animal);
-      hash = LPHashTable_set(&animals, animal);
-      existent_animals[i] = hash;
+      // hash = LPHashTable_set(&animals, animal);
+      // existent_animals[i] = hash;
+      existent_animals[i] = hash_str(animal, LPHASHTABLE_INITIAL_CAPACITY);
     }
 
     for (i = 0; i < number_of_relationships; i++)
     {
       scanf("%s %s", animal1, animal2);
-      v = LPHashTable_search(&animals, animal1);
-      w = LPHashTable_search(&animals, animal2);
-      MatUndGraph_insert_edge(food_chain, w, v);
+      // v = LPHashTable_search(&animals, animal1);
+      // w = LPHashTable_search(&animals, animal2);
+      MatUndGraph_insert_edge(food_chain, 
+        hash_str(animal1, LPHASHTABLE_INITIAL_CAPACITY), 
+        hash_str(animal2, LPHASHTABLE_INITIAL_CAPACITY));
     }
 
     // if (debug_mode)
@@ -328,8 +347,9 @@ int main(int argc, char const *argv[])
     max_cc_size = MatUndGraph_max_size_connected_component(food_chain, existent_animals, number_of_animals);
     printf("%d\n", max_cc_size);
 
-    MatUndGraph_reset(food_chain);
-    LPHashTable_reset(&animals);
+    // MatUndGraph_reset(food_chain);
+    MatUndGraph_reset_special(food_chain, existent_animals, number_of_animals);
+    // LPHashTable_reset(&animals);
   }
 
   MatUndGraph_destroy(food_chain);

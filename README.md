@@ -8,6 +8,11 @@ da Universidade de Brasília.
 
 [Progresso das aulas e exercícios](https://github.com/yudi-azvd/eda2/issues/1)
 
+### Livro
+Usado por mim: [Algorithms, 4th Edition](https://algs4.cs.princeton.edu/home/).
+
+Solução de alguns exercícios: [https://algs4.cs.princeton.edu/code/] (lá embaixo).
+
 
 ## Baixe o repositório
     git clone --recurse-submodules https://github.com/yudi-azvd/eda2
