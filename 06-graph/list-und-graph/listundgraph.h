@@ -79,22 +79,6 @@ void ListUndGraph_insert_edge(ListUndGraph *g, Vertex a, Vertex b)
   g->arr[b] = Node_create(a, g->arr[b]);
 }
 
-ListUndGraph *ListUndGraph_copy(ListUndGraph *original)
-{
-  ListUndGraph *copy = ListUndGraph_create(original->vertices);
-  copy->edges = original->edges;
-
-  int i;
-  for (i = 0; i < original->vertices; i++)
-  {
-    copy->arr[i] = original->arr[i];
-  }
-
-  // copiar cada nó
-  // ...
-  return copy;
-}
-
 void ListUndGraph_show(ListUndGraph *g)
 {
   printf("vertices: %d, edges: %d\n", g->vertices, g->edges);
