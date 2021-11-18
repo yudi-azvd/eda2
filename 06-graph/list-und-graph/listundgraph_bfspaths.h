@@ -36,7 +36,7 @@ typedef struct BFSPaths
 
 void bfs(ListUndGraph *g, int src, int counter, int *visited, int *edge_to)
 {
-  Vertex new_src, w;
+  Vertex v, w;
   Queue *q = Queue_create();
   Node *node;
   visited[src] = counter++;
@@ -44,13 +44,14 @@ void bfs(ListUndGraph *g, int src, int counter, int *visited, int *edge_to)
   Queue_enq(q, src);
   while (!Queue_empty(q))
   {
-    new_src = Queue_deq(q);
-    for (node = g->arr[new_src]; node != NULL; node = node->next)
+    v = Queue_deq(q);
+    for (node = g->arr[v]; node != NULL; node = node->next)
     {
       w = node->vertex;
-      if (visited[w] == NOT_VISITED) {
-        edge_to[w] = src;
-        visited[w] = counter;
+      if (visited[w] == NOT_VISITED)
+      {
+        edge_to[w] = v;
+        visited[w] = counter++;
         Queue_enq(q, w);
       }
     }
@@ -85,6 +86,7 @@ uint8_t BFSPaths_has_path_to(BFSPaths *p, Vertex v)
 
 // Assume que o caminho não vai ter mais vértices que o número
 // de vértices do grafo original.
+// O caminho inclui os nós de origem e destino
 Vertex *BFSPaths_path_to(BFSPaths *p, Vertex v, int *path_size)
 {
   if (!BFSPaths_has_path_to(p, v))
@@ -93,19 +95,28 @@ Vertex *BFSPaths_path_to(BFSPaths *p, Vertex v, int *path_size)
     return NULL;
   }
 
-  Vertex *path = (Vertex *)calloc(p->max_vertices, sizeof(Vertex));
+  Vertex *path_buffer = (Vertex *)calloc(p->max_vertices, sizeof(Vertex));
   Vertex src = p->src;
   int path_index = 0, edge_index = v;
 
   while (edge_index != src)
   {
-    path[path_index] = edge_index;
+    path_buffer[path_index] = edge_index;
     edge_index = p->edge_to[edge_index];
     path_index++;
   }
 
-  path[path_index++] = src;
+  path_buffer[path_index++] = src;
   *path_size = path_index;
+
+  // Copia path_buffer invertido em path.
+  Vertex *path = (Vertex *)calloc(*path_size, sizeof(Vertex));
+  for (path_index = 0; path_index < *path_size; path_index++)
+  {
+    path[path_index] = path_buffer[*path_size - path_index - 1];
+  }
+
+  free(path_buffer);
   return path;
 }
 

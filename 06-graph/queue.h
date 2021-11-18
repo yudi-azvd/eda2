@@ -57,8 +57,8 @@ void Queue_enq(Queue *q, int value)
   }
   else
   {
-    node->next = q->head;
-    q->head = node;
+    q->tail->next = node;
+    q->tail = node;
   }
 }
 
