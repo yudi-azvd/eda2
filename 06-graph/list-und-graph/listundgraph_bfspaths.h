@@ -64,8 +64,8 @@ BFSPaths *BFSPaths_create(ListUndGraph *g, Vertex src)
   BFSPaths *p = (BFSPaths *)calloc(1, sizeof(BFSPaths));
   p->visited = create_int_arr(g->vertices);
   p->edge_to = create_int_arr(g->vertices);
-  p->src = src;
   p->max_vertices = g->vertices;
+  p->src = src;
 
   bfs(g, src, 0, p->visited, p->edge_to);
   return p;
