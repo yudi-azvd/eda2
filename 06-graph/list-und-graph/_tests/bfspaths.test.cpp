@@ -3,7 +3,6 @@
 
 #include "../listundgraph_bfspaths.h"
 #include "../listundgraph_file.h"
-#include "listundgraph_test_helper.h"
 
 TEST_SUITE_BEGIN("listundgraph_bfspaths");
 

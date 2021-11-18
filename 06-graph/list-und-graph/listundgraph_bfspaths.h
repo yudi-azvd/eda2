@@ -86,7 +86,7 @@ uint8_t BFSPaths_has_path_to(BFSPaths *p, Vertex v)
 
 // Assume que o caminho não vai ter mais vértices que o número
 // de vértices do grafo original.
-// O caminho inclui os nós de origem e destino
+// O caminho inclui os nós de origem e destino [src, ..., dst]
 Vertex *BFSPaths_path_to(BFSPaths *p, Vertex v, int *path_size)
 {
   if (!BFSPaths_has_path_to(p, v))

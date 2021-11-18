@@ -76,6 +76,7 @@ uint8_t DFSPaths_has_path_to(DFSPaths *p, Vertex v)
 
 // Assume que o caminho não vai ter mais vértices que o número
 // de vértices do grafo original.
+// O caminho inclui os nós de origem e destino [src, ..., dst]
 Vertex *DFSPaths_path_to(DFSPaths *p, Vertex v, int *path_size)
 {
   if (!DFSPaths_has_path_to(p, v)) {
@@ -83,18 +84,26 @@ Vertex *DFSPaths_path_to(DFSPaths *p, Vertex v, int *path_size)
     return NULL;
   }
 
-  Vertex *path = (Vertex *)calloc(p->max_vertices, sizeof(Vertex));
+  Vertex *path_inverted = (Vertex *)calloc(p->max_vertices, sizeof(Vertex));
   Vertex src = p->src;
   int path_index = 0, edge_index = v;
 
   while (edge_index != src) {
-    path[path_index] = edge_index;
+    path_inverted[path_index] = edge_index;
     edge_index = p->edge_to[edge_index];
     path_index++;
   }
-
-  path[path_index++] = src;
+  path_inverted[path_index++] = src;
   *path_size = path_index;
+
+  // Copia path_buffer invertido em path.
+  Vertex *path = (Vertex *)calloc(*path_size, sizeof(Vertex));
+  for (path_index = 0; path_index < *path_size; path_index++)
+  {
+    path[path_index] = path_inverted[*path_size - path_index - 1];
+  }
+
+  free(path_inverted);
   return path;
 }
 
