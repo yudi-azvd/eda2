@@ -19,7 +19,8 @@ ListUndGraph *ListUndGraph_create_from_file(const char *filepath)
 
   FILE* fp = fopen(full_filepath, "r");
   if (!fp) {
-    printf("not possible to open %s", full_filepath);
+    printf("not possible to open:\n %s\n", full_filepath);
+    exit(EXIT_FAILURE);
   }
 
   int vertices, edges = -1, i = 0, v, w;

@@ -2,7 +2,7 @@
 #include "../../../../../lib/doctest.h"
 
 #include "../../../../list-und-graph/listundgraph.h"
-#include "../../util.h"
+#include "../../../../list-und-graph/listundgraph_file.h"
 #include "../04_has_edge/has_edge_list.h"
 #include "copy_list.h"
 
@@ -11,9 +11,7 @@ TEST_SUITE_BEGIN("listundgraph_copy");
 
 TEST_CASE("copy")
 {
-  ListUndGraph *original;
-  fill_graph_tinyG(&original);
-
+  ListUndGraph *original = ListUndGraph_create_from_file("algs4-data/tinyG.txt");
   ListUndGraph* copy = ListUndGraph_copy(original);
 
   CHECK(copy != original);

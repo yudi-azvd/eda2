@@ -2,16 +2,15 @@
 #include "../../../../../lib/doctest.h"
 
 #include "../../../../list-und-graph/listundgraph.h"
+#include "../../../../list-und-graph/listundgraph_file.h"
 #include "has_edge_list.h"
-#include "has_edge_list_util.h"
 
 // exercise-4.1.3
 TEST_SUITE_BEGIN("listundgraph_has_edge");
 
 TEST_CASE("has edge")
 {
-  ListUndGraph *g;
-  fill_graph_tinyG(&g);
+  ListUndGraph *g = ListUndGraph_create_from_file("algs4-data/tinyG.txt");
 
   CHECK(ListUndGraph_has_edge(g, 7, 8));
   CHECK(ListUndGraph_has_edge(g, 9, 10));

@@ -11,8 +11,8 @@
       "program": "${fileDirname}/a.out",
       "args": [
         "-d",
-        "<",
-        "samples/01.in"
+        // "<",
+        // "samples/01.in"
       ],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",

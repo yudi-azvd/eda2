@@ -5,9 +5,10 @@
 #include <linux/limits.h>
 #include <string.h>
 
-// Preenche `res_dir` com /.../eda2/resources.
-// "..." é o caminho absoluto até eda2/.
-// res_dir deve ser um buffer com PATH_MAX bytes
+// Preenche RES_DIR com "/.../eda2/resources".
+// "..." é o caminho absoluto até "eda2/".
+//
+// RES_DIR deve ser um buffer com PATH_MAX bytes.
 void get_res_dir(char *res_dir)
 {
   getcwd(res_dir, PATH_MAX);
