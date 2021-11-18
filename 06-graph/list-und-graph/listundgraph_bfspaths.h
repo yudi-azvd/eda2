@@ -95,7 +95,7 @@ Vertex *BFSPaths_path_to(BFSPaths *p, Vertex v, int *path_size)
     return NULL;
   }
 
-  Vertex *path_buffer = (Vertex *)calloc(p->max_vertices, sizeof(Vertex));
+  Vertex *path_buffer = create_int_arr(p->max_vertices);
   Vertex src = p->src;
   int path_index = 0, edge_index = v;
 
@@ -110,7 +110,7 @@ Vertex *BFSPaths_path_to(BFSPaths *p, Vertex v, int *path_size)
   *path_size = path_index;
 
   // Copia path_buffer invertido em path.
-  Vertex *path = (Vertex *)calloc(*path_size, sizeof(Vertex));
+  Vertex *path = create_int_arr(*path_size);
   for (path_index = 0; path_index < *path_size; path_index++)
   {
     path[path_index] = path_buffer[*path_size - path_index - 1];

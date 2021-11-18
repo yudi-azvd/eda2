@@ -4,6 +4,7 @@
 #include "../../../../list-und-graph/listundgraph.h"
 #include "has_edge_list.h"
 
+// exercise-4.1.4
 int ListUndGraph_has_edge(ListUndGraph* g, int v, int w) {
   Node* node = g->arr[v];
   while (node != NULL)
