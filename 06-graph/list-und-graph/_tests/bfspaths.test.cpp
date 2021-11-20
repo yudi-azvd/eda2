@@ -65,6 +65,20 @@ TEST_CASE("tinyCG path_to 4")
   ListUndGraph_destroy(g);
 }
 
+TEST_CASE("tinyCG dist_to")
+{
+  ListUndGraph *g = ListUndGraph_create_from_file("algs4-data/tinyCG.txt");
+  BFSPaths *p = BFSPaths_create(g, 0);
+
+
+  CHECK(2 == BFSPaths_dist_to(p, 3));
+  CHECK(2 == BFSPaths_dist_to(p, 4));
+  CHECK(1 == BFSPaths_dist_to(p, 5));
+
+  BFSPaths_destroy(p);
+  ListUndGraph_destroy(g);
+}
+
 TEST_CASE("tinyG has_path_to")
 {
   ListUndGraph *g = ListUndGraph_create_from_file("algs4-data/tinyG.txt");
@@ -89,7 +103,7 @@ TEST_CASE("tinyG has_path_to")
   ListUndGraph_destroy(g);
 }
 
-TEST_CASE("tinyG path_to")
+TEST_CASE("tinyG path_to 4")
 {
   ListUndGraph *g = ListUndGraph_create_from_file("algs4-data/tinyG.txt");
   BFSPaths *p = BFSPaths_create(g, 0);
@@ -103,6 +117,20 @@ TEST_CASE("tinyG path_to")
   CHECK(4 == path_to_4[2]);
 
   free(path_to_4);
+  BFSPaths_destroy(p);
+  ListUndGraph_destroy(g);
+}
+
+TEST_CASE("tinyG dist_to")
+{
+  ListUndGraph *g = ListUndGraph_create_from_file("algs4-data/tinyG.txt");
+  BFSPaths *p = BFSPaths_create(g, 0);
+
+  CHECK(2 == BFSPaths_dist_to(p, 4));
+  CHECK(2 == BFSPaths_dist_to(p, 3));
+  
+  CHECK(-1 == BFSPaths_dist_to(p, 7));
+
   BFSPaths_destroy(p);
   ListUndGraph_destroy(g);
 }
