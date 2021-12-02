@@ -44,6 +44,13 @@ Frequência de valores em uma coluna
 `uniq` precisa que os elementos repetidos estejam adjacentes. `sort` resolve 
 isso.
 
+Remover executáveis e resultados de executáveis (`samples/*.out`). Na raíz do 
+repositório:
+
+    find . -type f -name '*.out' -delete
+
+
+
 ## Benchmarking
 Para testar os benchmarks do professor:
 
