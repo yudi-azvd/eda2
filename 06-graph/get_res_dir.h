@@ -12,9 +12,9 @@
 void get_res_dir(char *res_dir)
 {
   getcwd(res_dir, PATH_MAX);
-  const char *base_dir_name = "eda2";
-  char *base_ptr = strstr(res_dir, base_dir_name);
-  *(base_ptr + strlen(base_dir_name)) = '\0';
+  const char *root_dir_name = "eda2";
+  char *root_dir_ptr = strstr(res_dir, root_dir_name);
+  *(root_dir_ptr + strlen(root_dir_name)) = '\0';
   const char *res = "/resources";
   strcat(res_dir, res);
 }
