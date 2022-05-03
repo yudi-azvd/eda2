@@ -1,5 +1,5 @@
-# Estruturas de Dados e Algoritmos 2 - FGA0030
-Repositório para a disciplina de Estruturas de Dados e Algoritmos 2
+# Estruturas de Dados e Algoritmos 2
+Repositório para a disciplina de Estruturas de Dados e Algoritmos 2 (FGA0030)
 da Universidade de Brasília.
 
 
@@ -11,7 +11,7 @@ da Universidade de Brasília.
 ### Livro
 Usado por mim: [Algorithms, 4th Edition](https://algs4.cs.princeton.edu/home/).
 
-Solução de alguns exercícios: [https://algs4.cs.princeton.edu/code/] (lá embaixo).
+Solução de alguns exercícios: [lá embaixo](https://algs4.cs.princeton.edu/code/).
 
 
 ## Baixe o repositório
