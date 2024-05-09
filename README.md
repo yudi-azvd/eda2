@@ -44,7 +44,7 @@ diretorio-do-exercicio/
 │   ├── 01.in
 │   └── 01.out.exp
 ├── a.out
-├── c.c
+├── programa.c
 └── test.sh
 ```
 
