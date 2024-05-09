@@ -21,8 +21,8 @@ A flag `--recurse-submodules` serve para inicializar os submódulos de `eda2`.
 Até o momento em que escrevo isso, os submódulos usados aqui estão em 
 `.gitmodules`.
 
-## Scripts de teste
-Tanto o `test.py` quanto o `test.sh` assumem algumas coisas:
+## Verificação automática com scripts de teste
+Tanto o script `test.py` quanto o `test.sh` assumem algumas coisas:
 
 - Existe um `a.out` no mesmo diretório, é o programa que vai ser testado
 - Existe um subdiretório `samples/` com os arquivos dos casos de teste 
@@ -37,7 +37,7 @@ Copie o script para o diretório onde o executável vai ser gerado e onde
 vai ficar o subdiretório `samples/`. Deve ficar algo assim:
 
 ```
-diretorio/
+diretorio-do-exercicio/
 ├── samples/
 │   ├── 00.in
 │   ├── 00.out.exp
@@ -60,7 +60,7 @@ Rode os testes com
 ./test.sh
 ```
 
-Se o seu programa está correto de acordo com os casos de teste, você deve algo assim:
+Se o seu programa está correto de acordo com os casos de teste, você deve ver algo assim:
 
 ```
 ⌚ time taken 0,006s
