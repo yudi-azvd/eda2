@@ -21,6 +21,72 @@ A flag `--recurse-submodules` serve para inicializar os submódulos de `eda2`.
 Até o momento em que escrevo isso, os submódulos usados aqui estão em 
 `.gitmodules`.
 
+## Scripts de teste
+Tanto o `test.py` quanto o `test.sh` assumem algumas coisas:
+
+- Existe um `a.out` no mesmo diretório, é o programa que vai ser testado
+- Existe um subdiretório `samples/` com os arquivos dos casos de teste 
+seguindo a seguinte organização:
+    - `xx.in`: o arquivo de entrada
+    - `xx.out.exp` o arquivo de saída esperada (é a resposta correta ou gabarito)
+
+Você só precisa de um deles pra executar os testes automáticos. Vamos supor
+que o escolhido é o `test.sh`.
+
+Copie o script para o diretório onde o executável vai ser gerado e onde
+vai ficar o subdiretório `samples/`. Deve ficar algo assim:
+
+```
+diretorio/
+├── samples/
+│   ├── 00.in
+│   ├── 00.out.exp
+│   ├── 01.in
+│   └── 01.out.exp
+├── a.out
+├── c.c
+└── test.sh
+```
+
+Certifique-se que o script tem permissão para execução. Se não tem, execute:
+
+```sh
+chmod +x test.sh
+```
+
+Rode os testes com 
+
+```sh
+./test.sh
+```
+
+Se o seu programa está correto de acordo com os casos de teste, você deve algo assim:
+
+```
+⌚ time taken 0,006s
+⌚ time taken 0,001s
+⌚ time taken 0,003s
+⌚ time taken 0,001s
+====================================
+SUCCESS:
+tests passed: 4/4
+====================================
+```
+
+### Rastreio do Git
+Se você executa esses testes em um repositório Git e não quer poluir o rastreio seguindo a estrutura recomendada, inclua o seguinte no seu `.gitignore`:
+
+```sh
+!*.out.exp
+**/test.py
+**/test.sh
+!/test.py
+!/test.sh
+```
+
+Assim, o Git vai ignorar todos os scripts de testes que não estiverem na raíz do repositório. Preferi assim porque eu podia modificar o script na raíz e copiá-lo pra onde eu quisesse sem 
+o Git acusar mudanças desnecessárias.
+
 
 ## Dados
 Em `resources/` devem existir alguns dados para testes. Esses dados você pode 
